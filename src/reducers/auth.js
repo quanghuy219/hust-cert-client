@@ -2,11 +2,17 @@ import {
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS,
 } from '../actions/user';
 
-const token = localStorage.getItem('token');
-export default function auth(state = {
-  isFetching: false,
-  isAuthenticated: !!token,
-}, action) {
+
+const token = localStorage.getItem('access_token');
+
+const initialState = {
+	access_token: token,
+	email: "",
+	name: "",
+	isAuthenticated: token ? true : false
+}
+
+export default function auth(state = initialState, action) {
   switch (action.type) {
       case LOGIN_REQUEST:
           return Object.assign({}, state, {
@@ -15,6 +21,8 @@ export default function auth(state = {
           });
       case LOGIN_SUCCESS:
           return Object.assign({}, state, {
+							email: action.payload.email,
+							name: action.payload.name,
               isFetching: false,
               isAuthenticated: true,
               errorMessage: '',

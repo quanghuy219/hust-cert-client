@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { 
   Alert, 
@@ -14,13 +14,10 @@ import {
 import s from './Login.module.scss';
 import Widget from '../../components/Widget';
 import Footer from "../../components/Footer";
-import { loginUser } from '../../actions/user';
-import jwt from 'jsonwebtoken';
-import config from '../../config'
+import { loginAction } from '../../actions/user';
 
 class Login extends React.Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
     isFetching: PropTypes.bool,
     location: PropTypes.any, // eslint-disable-line
@@ -34,21 +31,12 @@ class Login extends React.Component {
     errorMessage: null,
   };
 
-  static isAuthenticated(token) {
-    // We check if app runs with backend mode
-    if (!config.isBackend && token) return true;
-    if (!token) return;
-    const date = new Date().getTime() / 1000;
-    const data = jwt.decode(token);
-    return date < data.exp;
-}
-
   constructor(props) {
     super(props);
 
     this.state = {
-      login: 'user',
-      password: 'password',
+      login: '',
+      password: '',
     };
   }
 
@@ -61,12 +49,8 @@ class Login extends React.Component {
   }
 
   doLogin = (e) => {
-    this.props.dispatch(
-      loginUser({
-        login: this.state.login,
-        password: this.state.password,
-      }),
-    );
+    const { login, password } = this.state;
+    this.props.login(login, password);
     e.preventDefault();
   }
 
@@ -79,7 +63,6 @@ class Login extends React.Component {
       // cant access login page while logged in
       return <Redirect to={from} />;
     }
-
         return (
           <div className={s.root}>
           <Row>
@@ -140,7 +123,7 @@ class Login extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
     return {
         isFetching: state.auth.isFetching,
         isAuthenticated: state.auth.isAuthenticated,
@@ -148,5 +131,12 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRouter(connect(mapStateToProps)(Login));
+const mapDispatchToProps = {
+  login: loginAction.login
+}
 
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+) (Login);

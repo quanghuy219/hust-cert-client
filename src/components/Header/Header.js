@@ -29,7 +29,7 @@ import { NavLink } from 'react-router-dom';
 import Icon from '../Icon';
 
 import photo from '../../images/photo.jpg';
-import { logoutUser } from '../../actions/user';
+import { loginAction } from '../../actions/user';
 import s from './Header.module.scss';
 
 class Header extends React.Component {
@@ -51,7 +51,7 @@ class Header extends React.Component {
   }
 
   doLogout = () => {
-    this.props.dispatch(logoutUser());
+    this.props.logout();
   }
 
   render() {
@@ -122,4 +122,12 @@ function mapStateToProps(state) {
     init: state.runtime.initialNow,
   };
 }
-export default connect(mapStateToProps)(Header);
+
+const mapDispatchToProps = {
+  logout: loginAction.logoutUser
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+) (Header);

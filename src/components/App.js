@@ -13,8 +13,8 @@ import Login from '../pages/login';
 import Register from '../pages/register';
 import { logoutUser } from '../actions/user';
 
-const PrivateRoute = ({dispatch, component, ...rest }) => {
-    if (!Login.isAuthenticated(localStorage.getItem('id_token'))) {
+const PrivateRoute = ({dispatch, component, isAuthenticated, ...rest }) => {
+    if (!isAuthenticated) {
         dispatch(logoutUser());
         return (<Redirect to="/login"/>)
     } else {
@@ -39,7 +39,7 @@ class App extends React.PureComponent {
                 <Switch>
                     <Route path="/" exact render={() => <Redirect to="/app/main"/>}/>
                     <Route path="/app" exact render={() => <Redirect to="/app/main"/>}/>
-                    <PrivateRoute path="/app" dispatch={this.props.dispatch} component={LayoutComponent}/>
+                    <PrivateRoute path="/app" dispatch={this.props.dispatch} component={LayoutComponent} isAuthenticated={this.props.isAuthenticated} />
                     <Route path="/documentation" exact
                            render={() => <Redirect to="/documentation/getting-started/overview"/>}/>
                     {/* <Route path="/documentation" component={DocumentationLayoutComponent}/> */}
