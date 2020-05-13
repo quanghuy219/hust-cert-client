@@ -29,37 +29,48 @@ export const loginAction = {
 		payload: error
 	}),
 
-  logoutUser: () => {
-    return dispatch => {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('user');
-      dispatch({
-        type: LOGOUT_SUCCESS
-      })
-    };
-  },
+	logoutUser: () => {
+		return dispatch => {
+		localStorage.removeItem('access_token');
+		localStorage.removeItem('role');
+		localStorage.removeItem('user');
+		dispatch({
+			type: LOGOUT_SUCCESS
+		})
+		};
+	},
 
-	login: ( email, password, router ) => {
+	handleLoginSuccess: (res) => {
+		const {data, access_token, role} = res;
+		lcStorage.set('user', data);
+		lcStorage.set('access_token', access_token);
+		lcStorage.set('role', role);
+	},
+
+	login: ( email, password, role, router ) => {
 		return async function ( dispatch ) {
       dispatch({type: LOGIN_REQUEST});
-
-			await loginApi.login(email, password).then( res => {
-				const {data, message, access_token} = res;
-				lcStorage.set('user', data);
-				lcStorage.set('access_token', access_token);
-				// if(router.location.query.redirect) {
-				// 	router.push(router.location.query.redirect)
-				// } else {
-				// 	router.push('/')
-				// }
-				dispatch({
-          type: LOGIN_SUCCESS,
-          payload: res.data
-				})
-				dispatch (loginAction.loginSuccess ({message, status: true}))
+			await loginApi.login(email, password, role).then( res => {
+				loginAction.handleLoginSuccess(res)
+				dispatch (loginAction.loginSuccess (res))
 			}, error => {
 				console.log(error);
+				dispatch (loginAction.loginError(error))
       })			
 		}
+	},
+
+	studentLogin: (id, password) => {
+		return async function ( dispatch ) {
+			dispatch({type: LOGIN_REQUEST});
+				  await loginApi.studentLogin(id, password).then( res => {
+					  loginAction.handleLoginSuccess(res)
+					  dispatch (loginAction.loginSuccess (res))
+				  }, error => {
+					  console.log(error);
+					  dispatch (loginAction.loginError(error))
+				})			
+			  }
 	}
+
 }
