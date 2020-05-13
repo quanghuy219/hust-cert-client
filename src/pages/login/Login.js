@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { 
-  Alert, 
-  Button, 
-  FormGroup, 
-  Input, 
+import {
+  Nav, NavItem, NavLink,
+  Button,
+  FormGroup,
+  Input,
   Row,
   Col,
-  Form
+  Form,
+  Label,
 } from 'reactstrap';
-import s from './Login.module.scss';
-import Widget from '../../components/Widget';
-import Footer from "../../components/Footer";
 import { loginAction } from '../../actions/user';
+import { ACTOR } from '../../constants';
+import './style.css';
 
 class Login extends React.Component {
   static propTypes = {
@@ -37,106 +37,131 @@ class Login extends React.Component {
     this.state = {
       login: '',
       password: '',
+      role: 'admin',
+      errorMessage: props.errorMessage
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log()
+    if (nextProps.errorMessage) {
+      this.setState({errorMessage: nextProps.errorMessage})
+    }
+  }
+
   changeLogin = (event) => {
-    this.setState({login: event.target.value});
+    this.setState({ login: event.target.value });
   }
 
   changePassword = (event) => {
-    this.setState({password: event.target.value});
+    this.setState({ password: event.target.value });
   }
 
   doLogin = (e) => {
     const { login, password } = this.state;
-    this.props.login(login, password);
+    if (this.state.role === ACTOR.STUDENT) {
+      this.props.studentLogin(login, password);
+    }
+    else {
+      if (!this.emailIsValid(login)) {
+        this.setState({errorMessage: 'Invalid email address'})
+        return
+      }
+      this.props.login(login, password, this.state.role);
+    }
     e.preventDefault();
   }
 
+  emailIsValid = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  changeLoginActor = (loginRole) => {
+    this.setState({role: loginRole });
+  }
+
   render() {
-    const {from} = this.props.location.state || {
-      from: {pathname: '/app'},
+    const { from } = this.props.location.state || {
+      from: { pathname: '/app' },
     };
 
     if (this.props.isAuthenticated) {
       // cant access login page while logged in
       return <Redirect to={from} />;
     }
-        return (
-          <div className={s.root}>
+
+    return (
+      <div className="login-block">
+        <div className="container">
           <Row>
-            <Col xs={{size: 10, offset: 1}} sm={{size: 6, offset: 3}} lg={{size:4, offset: 4}}>
-              <p className="text-center">React Dashboard</p>
-              <Widget className={s.widget}>
-                <h4 className="mt-0">Login to your Web App</h4>
-                <p className="fs-sm text-muted">
-                  User your username and password to sign in<br />
-                  Don&#39;t have an account? Sign up now!
-                </p>
-                <Form className="mt" onSubmit={this.doLogin}>
-                  {this.props.errorMessage && (
-                    <Alert size="sm" color="danger">
-                      {this.props.errorMessage}
-                    </Alert>
-                  )}
-                  <FormGroup className="form-group">
-                    <Input
-                      className="no-border"
-                      value={this.state.login}
-                      onChange={this.changeLogin}
-                      type="text"
-                      required
-                      name="username"
-                      placeholder="Username"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Input
-                      className="no-border"
-                      value={this.state.password}
-                      onChange={this.changePassword}
-                      type="password"
-                      required
-                      name="password"
-                      placeholder="Password"
-                    />
-                  </FormGroup>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <a href="#" className="fs-sm">Trouble with account?</a> {/* eslint-disable-line */}
-                    <div>
-                      <Button color="default" size="sm">
-                        Create an account
-                      </Button>
-                      <Button color="success" size="sm" type="submit">
-                        {this.props.isFetching ? 'Loading...' : 'Login'}
-                      </Button>
-                    </div>
-                  </div>
-                </Form>
-              </Widget>
+            <Col className="col-md-4 login-sec">
+              <h2 className="text-center">Login Now</h2>
+
+              <Nav className="nav-pills nav-fill nav-header">
+                <NavItem>
+                  <NavLink className={this.state.role === 'admin' ? "active" : ""} onClick={() => this.changeLoginActor('admin')}>Admin</NavLink>
+                </NavItem>
+
+                <NavItem>
+                  <NavLink className={this.state.role === 'lecturer' ? "active" : ""} onClick={() => this.changeLoginActor('lecturer')} >Lecturer</NavLink>
+                </NavItem>
+
+                <NavItem>
+                  <NavLink className={this.state.role === 'student' ? "active" : ""} onClick={() => this.changeLoginActor('student')} >Student</NavLink>
+                </NavItem>
+              </Nav>
+
+              <p className={this.state.errorMessage ? "alert alert-danger" : "" } > {this.state.errorMessage} </p>
+              <Form className="login-form" onSubmit={this.doLogin}>
+                <FormGroup>
+                  <Label for="exampleInputEmail1" className="text-uppercase">Account</Label>
+                  <Input type="text" className="form-control" placeholder="" value={this.state.login} onChange={this.changeLogin} required/>
+                </FormGroup>
+
+                <FormGroup>
+                  <Label for="exampleInputPassword1" className="text-uppercase">Password</Label>
+                  <Input type="password" className="form-control" placeholder="" value={this.state.password} onChange={this.changePassword} required/>
+                </FormGroup>
+
+                <Button type="submit" className="btn btn-login float-right">Submit</Button>
+              </Form>
             </Col>
+
+            <Col className="col-md-8 banner-sec">
+              <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
+                <ol className="carousel-indicators">
+                  <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
+                </ol>
+                <div className="carousel-inner" role="listbox">
+                  <div className="carousel-item active">
+                    <img className="d-block img-fluid" src="https://static.pexels.com/photos/33972/pexels-photo.jpg" alt="First slide" />
+                  </div>
+                </div>
+              </div>
+            </Col>
+
           </Row>
-          <Footer className="text-center" />
-          </div>
-        );
-    }
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        isFetching: state.auth.isFetching,
-        isAuthenticated: state.auth.isAuthenticated,
-        errorMessage: state.auth.errorMessage,
-    };
+  return {
+    isFetching: state.auth.isFetching,
+    isAuthenticated: state.auth.isAuthenticated,
+    errorMessage: state.auth.errorMessage,
+  };
 }
 
 const mapDispatchToProps = {
-  login: loginAction.login
+  login: loginAction.login,
+  studentLogin: loginAction.studentLogin
 }
 
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-) (Login);
+)(Login);

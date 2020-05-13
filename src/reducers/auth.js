@@ -4,11 +4,13 @@ import {
 
 
 const token = localStorage.getItem('access_token');
+const userRole = localStorage.getItem('role');
 
 const initialState = {
 	access_token: token,
 	email: "",
 	name: "",
+	role: userRole,
 	isAuthenticated: token ? true : false
 }
 
@@ -21,17 +23,17 @@ export default function auth(state = initialState, action) {
           });
       case LOGIN_SUCCESS:
           return Object.assign({}, state, {
-							email: action.payload.email,
-							name: action.payload.name,
+							email: action.payload.data.email,
+							name: action.payload.data.name,
+							role: action.payload.role,
               isFetching: false,
               isAuthenticated: true,
-              errorMessage: '',
           });
       case LOGIN_FAILURE:
           return Object.assign({}, state, {
               isFetching: false,
               isAuthenticated: false,
-              errorMessage: action.payload,
+              errorMessage: action.payload.message,
           });
       case LOGOUT_SUCCESS:
           return Object.assign({}, state, {
