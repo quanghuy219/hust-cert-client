@@ -1,15 +1,16 @@
 import {
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS,
 } from '../actions/user';
+import { lcStorage } from '../core/utils/localStorage'
 
 
-const token = localStorage.getItem('access_token');
-const userRole = localStorage.getItem('role');
-
+const token = lcStorage.get('access_token');
+const userRole = lcStorage.get('role');
+const user = lcStorage.get('user');
 const initialState = {
 	access_token: token,
-	email: "",
-	name: "",
+	email: user.email || "",
+	name: user.name || "",
 	role: userRole,
 	isAuthenticated: token ? true : false
 }
@@ -38,6 +39,7 @@ export default function auth(state = initialState, action) {
       case LOGOUT_SUCCESS:
           return Object.assign({}, state, {
               isAuthenticated: false,
+              errorMessage: ''
           });
       default:
           return state;
