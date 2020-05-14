@@ -13,7 +13,7 @@ import {
   Label,
 } from 'reactstrap';
 import { loginAction } from '../../actions/user';
-import { ACTOR } from '../../constants';
+import { ACTOR, Role } from '../../constants';
 import './style.css';
 
 class Login extends React.Component {
@@ -82,7 +82,7 @@ class Login extends React.Component {
 
   render() {
     const { from } = this.props.location.state || {
-      from: { pathname: '/app' },
+      from: { pathname: '/home' },
     };
 
     if (this.props.isAuthenticated) {

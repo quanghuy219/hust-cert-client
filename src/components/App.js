@@ -12,12 +12,13 @@ import LayoutComponent from '../components/Layout';
 import Login from '../pages/login';
 import Register from '../pages/register';
 import { logoutUser } from '../actions/user';
+import { Role, ACTOR } from '../constants'
 
-const PrivateRoute = ({dispatch, component, isAuthenticated, ...rest }) => {
-    if (!isAuthenticated) {
+const PrivateRoute = ({dispatch, component, isAuthenticated, role, ...rest }) => {
+    if (!isAuthenticated || !Role.getAll().includes(role)) {
         dispatch(logoutUser());
         return (<Redirect to="/login"/>)
-    } else {
+		} else {
         return ( // eslint-disable-line
             <Route {...rest} render={props => (React.createElement(component, props))}/>
         );
@@ -27,7 +28,23 @@ const PrivateRoute = ({dispatch, component, isAuthenticated, ...rest }) => {
 const CloseButton = ({closeToast}) => <i onClick={closeToast} className="la la-close notifications-close"/>
 
 class App extends React.PureComponent {
+
+	userActor() {
+		if ( Role.getAdminRoles().includes(this.props.role) ) {
+      return ACTOR.ADMIN;
+    }
+    else if (this.props.role === Role.LECTURER) {
+      return ACTOR.LECTURER;
+    }
+    else {
+      return ACTOR.STUDENT
+    }
+	}
+
   render() {
+		const actor = this.userActor();
+		const redirectedRoute = `/home/${actor}`;
+
     return (
         <div>
             <ToastContainer
@@ -37,9 +54,9 @@ class App extends React.PureComponent {
             />
             <HashRouter>
                 <Switch>
-                    <Route path="/" exact render={() => <Redirect to="/app/main"/>}/>
-                    <Route path="/app" exact render={() => <Redirect to="/app/main"/>}/>
-                    <PrivateRoute path="/app" dispatch={this.props.dispatch} component={LayoutComponent} isAuthenticated={this.props.isAuthenticated} />
+                    <Route path="/" exact render={() => <Redirect to={redirectedRoute} />}/>
+                    <Route path="/home" exact render={() => <Redirect to={redirectedRoute} />}/>
+                    <PrivateRoute path="/home" dispatch={this.props.dispatch} component={LayoutComponent} isAuthenticated={this.props.isAuthenticated} role={this.props.role} />
                     <Route path="/documentation" exact
                            render={() => <Redirect to="/documentation/getting-started/overview"/>}/>
                     {/* <Route path="/documentation" component={DocumentationLayoutComponent}/> */}
@@ -55,6 +72,7 @@ class App extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
+  role: state.auth.role,
   isAuthenticated: state.auth.isAuthenticated,
 });
 

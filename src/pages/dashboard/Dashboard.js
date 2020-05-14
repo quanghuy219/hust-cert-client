@@ -180,7 +180,7 @@ class Dashboard extends Component {
               title={
                 <div>
                   <div className="pull-right mt-n-xs">
-                    <Link to="/app/main" className="td-underline fs-sm">Options</Link>
+                    <Link to="/home/main" className="td-underline fs-sm">Options</Link>
                   </div>
                   <h5 className="mt-0 mb-0">
                     Recent posts{' '}
@@ -201,7 +201,7 @@ class Dashboard extends Component {
                   <tr key={post.id}>
                     <td>{this.formatDate(new Date(post.updatedAt).toLocaleString())}</td>
                     <td>
-                      <Link to="/app/posts">{post.title}</Link>
+                      <Link to="/home/posts">{post.title}</Link>
                     </td>
                   </tr>
                 ))}
@@ -211,7 +211,7 @@ class Dashboard extends Component {
                     <tr key={post.id}>
                       <td>{post.updatedAt}</td>
                       <td>
-                        <Link to="/app/posts">{post.title}</Link>
+                        <Link to="/home/posts">{post.title}</Link>
                       </td>
                     </tr>
                   ))
@@ -224,7 +224,7 @@ class Dashboard extends Component {
                 </tbody>
               </table>
               <div className="d-flex justify-content-end">
-                <Link to="/app/posts" className="btn btn-default">
+                <Link to="/home/posts" className="btn btn-default">
                   View all Posts <Badge className="ml-xs" color="danger">13</Badge>
                 </Link>
               </div>
@@ -232,23 +232,23 @@ class Dashboard extends Component {
           </Col>
           <Col sm={6}>
             <ListGroup>
-              <Link to="/app" className="list-group-item">
+              <Link to="/home" className="list-group-item">
                 <i className="fa fa-phone mr-xs text-secondary" />{' '}
                 Incoming calls <Badge className="ml-xs" color="danger">3</Badge>
               </Link>
-              <Link to="/app" className="list-group-item">
+              <Link to="/home" className="list-group-item">
                 <i className="fa fa-bell-o mr-xs text-secondary" />{' '}
                 Notifications <Badge className="ml-xs" color="warning">6</Badge>
               </Link>
-              <Link to="/app" className="list-group-item">
+              <Link to="/home" className="list-group-item">
                 <i className="fa fa-comment-o mr-xs text-secondary" />{' '}
                 Messages <Badge className="ml-xs" color="success">18</Badge>
               </Link>
-              <Link to="/app" className="list-group-item">
+              <Link to="/home" className="list-group-item">
                 <i className="fa fa-eye mr-xs text-secondary" />{' '}
                 Visits total
               </Link>
-              <Link to="/app" className="list-group-item">
+              <Link to="/home" className="list-group-item">
                 <i className="fa fa-cloud mr-xs text-secondary" /> Inbox{' '}
               </Link>
             </ListGroup>

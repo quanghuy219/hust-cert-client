@@ -15,7 +15,6 @@ import {
   Navbar,
   Nav,
   NavItem,
-  Button,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -26,8 +25,6 @@ import {
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
-import Icon from '../Icon';
-
 import photo from '../../images/photo.jpg';
 import { loginAction } from '../../actions/user';
 import s from './Header.module.scss';
@@ -35,7 +32,6 @@ import s from './Header.module.scss';
 class Header extends React.Component {
   static propTypes = {
     sidebarToggle: PropTypes.func,
-    dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -76,27 +72,10 @@ class Header extends React.Component {
           </NavItem>
         </Nav>
         <Nav className="ml-auto">
-          <NavItem className={cx('', s.headerIcon)}>
-            <Button>
-              <Icon glyph="mail"/>
-              <span>8</span>
-            </Button>
-          </NavItem>
-          <NavItem className={cx('', s.headerIcon)}>
-            <Button>
-              <Icon glyph="notification"/>
-              <span>13</span>
-            </Button>
-          </NavItem>
-          <NavItem className={cx('', s.headerIcon)}>
-            <Button>
-              <Icon glyph="settings"/>
-            </Button>
-          </NavItem>
           <Dropdown isOpen={isOpen} toggle={this.toggleDropdown}>
             <DropdownToggle nav>
               <img className={cx('rounded-circle mr-sm', s.adminPhoto)} src={photo} alt="administrator" />
-              <span className="text-body">Administrator</span>
+              <span className="text-body">{this.props.auth.name}</span>
               <i className={cx('fa fa-angle-down ml-sm', s.arrow, {[s.arrowActive]: isOpen})} />
             </DropdownToggle>
             <DropdownMenu style={{width: '100%'}}>
@@ -120,6 +99,7 @@ class Header extends React.Component {
 function mapStateToProps(state) {
   return {
     init: state.runtime.initialNow,
+    auth: state.auth
   };
 }
 

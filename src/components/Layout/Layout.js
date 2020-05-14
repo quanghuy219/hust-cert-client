@@ -10,6 +10,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { Switch, Route, withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 import s from './Layout.module.scss';
 import Header from '../Header';
@@ -30,6 +31,9 @@ import Posts from '../../pages/posts'
 import Profile from '../../pages/profile'
 import Privacy from '../../pages/privacy'
 
+import { Role } from '../../constants';
+import { loginAction } from '../../actions/user';
+
 class Layout extends React.Component {
   constructor(props) {
     super(props);
@@ -37,6 +41,51 @@ class Layout extends React.Component {
     this.state = {
       sidebarOpen: false,
     };
+  }
+
+  renderRouter() {
+    const adminRoute = (
+      <Switch>
+        <Route path="/home/admin" exact component={Dashboard} />
+        <Route path="/home/admin/typography" exact component={Typography} />
+        <Route path="/home/admin/tables" exact component={Tables} />
+        <Route path="/home/admin/posts" component={Posts} />
+        <Route path="/home/admin/privacy" exact component={Privacy} />
+        <Route path="/home/admin/profile" exact component={Profile} />
+        <Route path="/home/admin/notifications" exact component={Notifications} /> 
+        <Route path="/home/admin/components/buttons" exact component={Buttons} />
+        <Route path="/home/admin/components/charts" exact component={Charts} />
+        <Route path="/home/admin/components/icons" exact component={Icons} />
+        <Route path="/home/admin/components/maps" exact component={Maps} />
+        <Route component={NotFound}/>
+      </Switch>
+    );
+    const lecturerRoute = (
+      <Switch>
+        <Route path="/home/lecturer" exact component={Dashboard} />
+        <Route path="/home/lecturer/typography" exact component={Typography} />
+        <Route path="/home//lecturer/tables" exact component={Tables} />
+        <Route component={NotFound}/>
+      </Switch>
+    )
+    const studentRoute = (
+      <Switch>
+        <Route path="/home/student" exact component={Dashboard} />
+        <Route path="/home/student/typography" exact component={Typography} />
+        <Route path="/home/student/tables" exact component={Tables} />
+        <Route component={NotFound}/>
+      </Switch>
+    )
+
+    if ( Role.getAdminRoles().includes(this.props.role) ) {
+      return adminRoute;
+    }
+    else if (this.props.role === Role.LECTURER) {
+      return lecturerRoute
+    }
+    else {
+      return studentRoute
+    }
   }
 
   render() {
@@ -54,20 +103,7 @@ class Layout extends React.Component {
             }
           />
           <main className={s.content}>
-            <Switch>
-              <Route path="/app/main" exact component={Dashboard} />
-              <Route path="/app/typography" exact component={Typography} />
-              <Route path="/app/tables" exact component={Tables} />
-              <Route path="/app/posts" component={Posts} />
-              <Route path="/app/privacy" exact component={Privacy} />
-              <Route path="/app/profile" exact component={Profile} />
-              <Route path="/app/notifications" exact component={Notifications} /> 
-              <Route path="/app/components/buttons" exact component={Buttons} />
-              <Route path="/app/components/charts" exact component={Charts} />
-              <Route path="/app/components/icons" exact component={Icons} />
-              <Route path="/app/components/maps" exact component={Maps} />
-              <Route component={NotFound} />
-            </Switch>
+            {this.renderRouter()}
           </main>
           <Footer />
         </div>
@@ -76,4 +112,14 @@ class Layout extends React.Component {
   }
 }
 
-export default withRouter(Layout);
+const mapStateToProps = (state) => {
+  return {
+    role: state.auth.role
+  };
+}
+
+const mapDispatchToProps = {
+  logout: loginAction.logoutUser
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (Layout));
