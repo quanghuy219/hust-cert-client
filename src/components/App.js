@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router';
 import { HashRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Slide } from 'react-toastify';
 
 import ErrorPage from '../pages/error';
 
@@ -49,9 +49,10 @@ class App extends React.PureComponent {
     return (
         <div>
             <ToastContainer
-                autoClose={5000}
+                autoClose={3000}
                 hideProgressBar
                 closeButton={<CloseButton/>}
+                transition={Slide}
             />
 
             <HashRouter>

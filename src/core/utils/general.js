@@ -2,7 +2,10 @@
 //  general.js : Containing general, app-wide utils
 //-------------------------------------
 
+import { toast } from 'react-toastify';
+
 import { persistUtils } from './persist'
+
 
 export const generalUtils = {
 
@@ -95,5 +98,11 @@ export const generalUtils = {
 
 	isLogin: () => {
 		return persistUtils.loadProperty('access_token', '') !== ''
+	},
+
+	showErrorNotification: (errorMessage) => {
+		toast.error(errorMessage, {
+			position: 'bottom-left'
+		})
 	}
 }

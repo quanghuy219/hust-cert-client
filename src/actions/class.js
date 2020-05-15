@@ -1,4 +1,5 @@
 import { classApi, lecturerApi } from '../core/api'
+import { generalUtils } from '../core/utils/general'
 
 export const FETCH_CLASSES_SUCCESS = 'FETCH_CLASSES_SUCCESS'
 
@@ -18,7 +19,8 @@ export const classAction = {
       await classApi.getClasses(page).then(res => {
         dispatch( classAction.fetchClassSuccess(res) )
       }, error => {
-        console.log(error);
+        generalUtils.showErrorNotification(error.message)
+        console.log(error)
       })
     }
   },
@@ -28,6 +30,7 @@ export const classAction = {
       await lecturerApi.getClasses(page).then(res => {
         dispatch( classAction.fetchClassSuccess(res) )
       }, error => {
+        generalUtils.showErrorNotification(error.message)
         console.log(error);
       })
     }
