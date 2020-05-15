@@ -1,311 +1,102 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import ReactPaginate from 'react-paginate';
 import {
-  Row,
-  Col,
-  Alert,
-  Button,
-  ButtonGroup,
-  Breadcrumb,
-  BreadcrumbItem,
-  Progress,
-  Badge,
-  ListGroup,
-  ButtonDropdown,
-  DropdownMenu,
-  DropdownToggle,
-  DropdownItem,
-  Table
+  Table,
 } from 'reactstrap';
-import { mock } from './mock'
 
-import Widget from '../../components/Widget';
-
-import { fetchPosts } from '../../actions/posts';
 import s from './Dashboard.module.scss';
 
+import { classAction } from '../../actions/class';
+import { Role } from '../../constants'
+
 class Dashboard extends Component {
-  /* eslint-disable */
-  static propTypes = {
-    posts: PropTypes.any,
-    isFetching: PropTypes.bool,
-    dispatch: PropTypes.func.isRequired,
-  };
-  /* eslint-enable */
+  constructor(props) {
+    super(props);
 
-  static defaultProps = {
-    posts: [],
-    isFetching: false,
-  };
-
-  state = {
-    isDropdownOpened: false
-  };
+    this.state = {
+      page: 1,
+    };
+  }
 
   componentDidMount() {
-    if(process.env.NODE_ENV === "development") {
-      this.props.dispatch(fetchPosts());      
+    this.fetchClasses()
+  }
+
+  fetchClasses() {
+    if (Role.getAdminRoles().includes(this.props.auth.role) ) {
+      this.props.fetchAllClasses(this.state.page)
+    } else {
+      this.props.fetchClassesByLecturer(this.state.page)
     }
   }
 
-  formatDate = (str) => {
-    return str.replace(/,.*$/,"");
+  parseDate(dateString) {
+    const date = new Date(dateString);
+    this.dateSet = date.toDateString().split(' ');
+    return `${date.toLocaleString('en-us', { month: 'long' })} ${this.dateSet[2]}, ${this.dateSet[3]}`;
   }
 
-  toggleDropdown = () => {
-    this.setState(prevState => ({
-      isDropdownOpened: !prevState.isDropdownOpened,
-    }));
-  }
+  handlePageClick = data => {
+    let selected = data.selected + 1;
+
+    this.setState({ page: selected }, () => {
+      this.fetchClasses()
+    });
+  };
 
   render() {
+    const pageCount = Math.ceil(this.props.totalItems / this.props.itemsPerPage);
     return (
       <div className={s.root}>
-        <Breadcrumb>
-          <BreadcrumbItem>YOU ARE HERE</BreadcrumbItem>
-          <BreadcrumbItem active>Dashboard</BreadcrumbItem>
-        </Breadcrumb>
         <h1 className="mb-lg">Dashboard</h1>
-        <Row>
-          <Col sm={12} md={6}>
-            <Widget
-              title={
-                <div>
-                  <div className="pull-right mt-n-xs">
-                    <input
-                      type="search"
-                      placeholder="Search..."
-                      className="form-control input-sm"
-                    />
-                  </div>
-                  <h5 className="mt-0 mb-3">
-                    <i className="fa fa-user mr-xs opacity-70" />{' '}
-                    Users
-                  </h5>
-                </div>
-              }
-            >
-              <Table responsive borderless className={cx('mb-0', s.usersTable)}>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Alice</td>
-                    <td>alice@email.com</td>
-                    <td>
-                      <span className="py-0 px-1 bg-success rounded text-white">active</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Bob</td>
-                    <td>bob@email.com</td>
-                    <td>
-                      <span className="py-0 px-1 bg-warning rounded text-white">delayed</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Duck</td>
-                    <td>duck@email.com</td>
-                    <td>
-                      <span className="py-0 px-1 bg-success rounded text-white">active</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Shepherd</td>
-                    <td>shepherd@email.com</td>
-                    <td>
-                      <span className="py-0 px-1 bg-danger rounded text-white">removed</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Widget>
-          </Col>
-          <Col sm={12} md={6}>
-            <Widget title="Alerts">
-              <Alert
-                className="alert-sm"
-                color="warning"
-              >
-                <span className="fw-semi-bold">Warning:</span> Best check yo
-                self, you&#39;re not looking too good.
-              </Alert>
-              <Alert
-                className="alert-sm"
-                color="success"
-              >
-                <span className="fw-semi-bold">Success:</span> You successfully
-                read this important alert message.
-              </Alert>
-              <Alert
-                className="alert-sm"
-                color="info"
-              >
-                <span className="fw-semi-bold">Info:</span> This alert needs
-                your attention, but it&#39;s not super important.
-              </Alert>
-              <Alert
-                className="alert-sm clearfix"
-                color="danger"
-              >
-                <span className="fw-semi-bold">Danger:</span> Change this and
-                that and try again.
-                <span className="pull-right mr-sm">
-                  <Button color="danger" size="sm">
-                    Take this action
-                  </Button>
-                  <span className="px-2"> or </span>
-                  <Button color="default" size="sm">Cancel</Button>
-                </span>
-              </Alert>
-            </Widget>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={6}>
-            <Widget
-              title={
-                <div>
-                  <div className="pull-right mt-n-xs">
-                    <Link to="/home/main" className="td-underline fs-sm">Options</Link>
-                  </div>
-                  <h5 className="mt-0 mb-0">
-                    Recent posts{' '}
-                    <Badge color="success" className="ml-xs">
-                      5
-                    </Badge>
-                  </h5>
-                  <p className="fs-sm mb-0 text-muted">
-                    posts, that have been published recently
-                  </p>
-                </div>
-              }
-            >
-              <table className="table table-sm table-no-border mb-0">
-                <tbody>
-                {this.props.posts &&
-                this.props.posts.map(post => (
-                  <tr key={post.id}>
-                    <td>{this.formatDate(new Date(post.updatedAt).toLocaleString())}</td>
-                    <td>
-                      <Link to="/home/posts">{post.title}</Link>
-                    </td>
-                  </tr>
-                ))}
-                {this.props.posts &&
-                !this.props.posts.length && (
-                  mock.map(post => (
-                    <tr key={post.id}>
-                      <td>{post.updatedAt}</td>
-                      <td>
-                        <Link to="/home/posts">{post.title}</Link>
-                      </td>
-                    </tr>
-                  ))
-                )}
-                {this.props.isFetching && (
-                  <tr>
-                    <td colSpan="100">Loading...</td>
-                  </tr>
-                )}
-                </tbody>
-              </table>
-              <div className="d-flex justify-content-end">
-                <Link to="/home/posts" className="btn btn-default">
-                  View all Posts <Badge className="ml-xs" color="danger">13</Badge>
-                </Link>
-              </div>
-            </Widget>
-          </Col>
-          <Col sm={6}>
-            <ListGroup>
-              <Link to="/home" className="list-group-item">
-                <i className="fa fa-phone mr-xs text-secondary" />{' '}
-                Incoming calls <Badge className="ml-xs" color="danger">3</Badge>
-              </Link>
-              <Link to="/home" className="list-group-item">
-                <i className="fa fa-bell-o mr-xs text-secondary" />{' '}
-                Notifications <Badge className="ml-xs" color="warning">6</Badge>
-              </Link>
-              <Link to="/home" className="list-group-item">
-                <i className="fa fa-comment-o mr-xs text-secondary" />{' '}
-                Messages <Badge className="ml-xs" color="success">18</Badge>
-              </Link>
-              <Link to="/home" className="list-group-item">
-                <i className="fa fa-eye mr-xs text-secondary" />{' '}
-                Visits total
-              </Link>
-              <Link to="/home" className="list-group-item">
-                <i className="fa fa-cloud mr-xs text-secondary" /> Inbox{' '}
-              </Link>
-            </ListGroup>
-          </Col>
-        </Row>
-        <Widget className="mt-lg" title="Some standard reactstrap components">
-          <Row>
-            <Col sm={6}>
-              <div className="mt">
-                <Button size="sm" color="default" className="mr-sm mb-xs">
-                  Default
-                </Button>
-                <Button size="sm" color="success" className="mr-sm mb-xs">
-                  Success
-                </Button>
-                <Button size="sm" color="info" className="mr-sm mb-xs">
-                  Info
-                </Button>
-                <Button size="sm" color="warning" className="mr-sm mb-xs">
-                  Warning
-                </Button>
-                <Button size="sm" color="danger" className="mb-xs">
-                  Danger
-                </Button>
-              </div>
-              <ButtonGroup className="mb">
-                <Button color="default">1</Button>
-                <Button color="default">2</Button>
-                <ButtonDropdown isOpen={this.state.isDropdownOpened} toggle={this.toggleDropdown}>
-                  <DropdownToggle color="default" caret>
-                    Dropdown
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>1</DropdownItem>
-                    <DropdownItem>2</DropdownItem>
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </ButtonGroup>
-              <p className="mb-0">
-                For more components please checkout{' '}
-                <a
-                  href="https://reactstrap.github.io/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  reactstrap documentation
-                </a>
-              </p>
-            </Col>
-            <Col sm={6}>
-              <Progress className="progress-sm" color="success" value={40} />
-              <Progress className="progress-sm" color="info" value={20} />
-              <Progress className="progress-sm" color="warning" value={60} />
-              <Progress className="progress-sm" color="danger" value={80} />
-            </Col>
-          </Row>
-        </Widget>
+
+        <Table borderless className={s.mainTable}>
+          <thead>
+            <tr>
+              <th className="hidden-sm-down">Semester</th>
+              <th>Class ID</th>
+              <th>Course ID</th>
+              <th>Course Name</th>
+              <th className="hidden-sm-down">Lecturer</th>
+              <th className="hidden-sm-down">Grade Submitted</th>
+              <th className="hidden-sm-down">Grade Approved</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {
+              this.props.classes.map(row =>
+                <tr key={row.id}>
+                  <td>{row.semester}</td>
+                  <td>{row.id}</td>
+                  <td>{row.course.id}</td>
+                  <td>{row.course.name}</td>
+                  <td>{row.lecturer.name}</td>
+                  <td>{this.parseDate(row.grade_submitted_time)}</td>
+                  <td>{this.parseDate(row.grade_approved_time)}</td>
+                </tr>,
+              )
+            }
+          </tbody>
+        </Table>
+
+        <ReactPaginate
+          previousLabel={'Previous'}
+          nextLabel={'Next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
       </div>
     );
   }
@@ -313,9 +104,16 @@ class Dashboard extends Component {
 
 function mapStateToProps(state) {
   return {
-    isFetching: state.posts.isFetching,
-    posts: state.posts.posts,
+    classes: state.classes.data,
+    totalItems: state.classes.totalItems,
+    itemsPerPage: state.classes.itemsPerPage,
+    auth: state.auth
   };
 }
 
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = {
+  fetchAllClasses: classAction.fetchAllClasses,
+  fetchClassesByLecturer: classAction.fetchClassesByLecturer
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

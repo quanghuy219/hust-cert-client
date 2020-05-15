@@ -1,0 +1,23 @@
+.pagination {
+    justify-content: center;
+    margin:30px;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+  
+.pagination .active a {
+    background-color: #ed6b5c;
+    color: white;
+}
+
+.pagination a:focus {
+    outline: none;
+}
+.pagination .disabled > a {
+    cursor: not-allowed;
+}

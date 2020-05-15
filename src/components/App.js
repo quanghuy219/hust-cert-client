@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import ErrorPage from '../pages/error';
 
 import '../styles/theme.scss';
+import '../styles/style.css';
 import LayoutComponent from '../components/Layout';
 //import DocumentationLayoutComponent from '../documentation/DocumentationLayout';
 import Login from '../pages/login';
@@ -52,6 +53,7 @@ class App extends React.PureComponent {
                 hideProgressBar
                 closeButton={<CloseButton/>}
             />
+
             <HashRouter>
                 <Switch>
                     <Route path="/" exact render={() => <Redirect to={redirectedRoute} />}/>
