@@ -2,14 +2,14 @@ import { restUtils } from '../utils/index'
 
 // Constants
 import config from "../configs"
-import { ssStorage } from '../utils/sessionStorage'
+import { lcStorage } from '../utils/localStorage'
 
 const BASE_URL = config.BASE_URL
 
 function getHeaders() {
     return {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + ssStorage.get('access_token')
+        'Authorization': 'Bearer ' + lcStorage.get('access_token')
     }
 }
 
@@ -24,12 +24,6 @@ function parseParams(params = {}) {
 }
 
 export const httpRequest = {
-	/**
-	 * Fetch video search results from the Youtube API
-	 * @param uri
-	 * @param params
-	 * @returns {Promise.<TResult>}
-	 */
 
     post: (uri, params = {}) => {
         const options = {
@@ -43,12 +37,6 @@ export const httpRequest = {
 			.then ( ( response ) => response )
     },
 
-    /**
-	 * Fetch video search results from the Youtube API
-	 * @param uri
-	 * @param params
-	 * @returns {Promise.<TResult>}
-	 */
 
     put: (uri, params) => {
         const options = {
@@ -62,12 +50,6 @@ export const httpRequest = {
 			.then ( ( response ) => response )
     },
 
-    /**
-	 * Fetch video search results from the Youtube API
-	 * @param uri
-	 * @param params
-	 * @returns {Promise.<TResult>}
-	 */
 
     get: (uri, params = {}) => {
         const options = {
@@ -81,13 +63,6 @@ export const httpRequest = {
 			.then ( restUtils.handleRestResponse )
 			.then ( ( response ) => response )
     },
-
-    /**
-	 * Fetch video search results from the Youtube API
-	 * @param uri
-	 * @param params
-	 * @returns {Promise.<TResult>}
-	 */
 
     delete: (uri) => {
         const options = {
