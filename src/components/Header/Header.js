@@ -19,9 +19,6 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Input,
-  InputGroup,
-  InputGroupAddon,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
@@ -62,14 +59,6 @@ class Header extends React.Component {
           >
             <i className="fa fa-bars fa-2x text-muted" />
           </NavItem>
-          <NavItem>
-            <InputGroup>
-              <Input placeholder="Search for..." />
-              <InputGroupAddon addonType="append" className="px-2">
-                <i className="fa fa-search" />
-              </InputGroupAddon>
-            </InputGroup>
-          </NavItem>
         </Nav>
         <Nav className="ml-auto">
           <Dropdown isOpen={isOpen} toggle={this.toggleDropdown}>
@@ -84,10 +73,7 @@ class Header extends React.Component {
             </DropdownToggle>
             <DropdownMenu style={{ width: '100%' }}>
               <DropdownItem>
-                <NavLink to="/app/posts">Posts</NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink to="/app/profile">Profile</NavLink>
+                <NavLink to="/home/profile">Profile</NavLink>
               </DropdownItem>
               <DropdownItem onClick={this.doLogout}>Logout</DropdownItem>
             </DropdownMenu>
