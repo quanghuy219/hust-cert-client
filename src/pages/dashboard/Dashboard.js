@@ -12,6 +12,7 @@ import s from './Dashboard.module.scss';
 
 import { classAction } from '../../actions/class';
 import { Role } from '../../constants'
+import { generalUtils } from '../../core/utils';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -32,12 +33,6 @@ class Dashboard extends Component {
     } else {
       this.props.fetchClassesByLecturer(this.state.page)
     }
-  }
-
-  parseDate(dateString) {
-    const date = new Date(dateString);
-    this.dateSet = date.toDateString().split(' ');
-    return `${date.toLocaleString('en-us', { month: 'long' })} ${this.dateSet[2]}, ${this.dateSet[3]}`;
   }
 
   handlePageClick = data => {
@@ -76,8 +71,8 @@ class Dashboard extends Component {
                   <td>{row.course.id}</td>
                   <td>{row.course.name}</td>
                   <td>{row.lecturer.name}</td>
-                  <td>{this.parseDate(row.grade_submitted_time)}</td>
-                  <td>{this.parseDate(row.grade_approved_time)}</td>
+                  <td>{generalUtils.parseDate(row.grade_submitted_time)}</td>
+                  <td>{generalUtils.parseDate(row.grade_approved_time)}</td>
                 </tr>,
               )
             }

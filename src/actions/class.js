@@ -1,9 +1,9 @@
 import { classApi, lecturerApi } from '../core/api'
 import { generalUtils } from '../core/utils/general'
-import { func } from 'prop-types'
 
 export const FETCH_CLASSES_SUCCESS = 'FETCH_CLASSES_SUCCESS'
 export const FETCH_CLASS_SUCCESS = 'FETCH_CLASS_SUCCESS'
+export const UPDATE_GRADES_SUCCESS = 'UPDATE_GRADES_SUCCESS'
 
 export const classAction = {
 
@@ -18,6 +18,11 @@ export const classAction = {
 
   fetchClassSuccess: (res) => ({
     type: FETCH_CLASS_SUCCESS,
+    payload: res
+  }),
+
+  updateGradesSuccess: (res) => ({
+    type: UPDATE_GRADES_SUCCESS,
     payload: res
   }),
 
@@ -53,6 +58,29 @@ export const classAction = {
         console.log(error)
       })
     }
+  },
+
+  submitGrades: (classID, grades) => {
+    return async function (dispatch) {
+      classApi.submitGrades(classID, grades).then(res => {
+        dispatch( classAction.updateGradesSuccess(res) )
+        generalUtils.showSuccessNotification('Grades updated successfully')
+      }, error => {
+        generalUtils.showErrorNotification(error.message)
+      })
+    }
+  },
+
+  approveGrades: (classID) => {
+    return async function (dispatch) {
+      classApi.approveGrades(classID).then(res => {
+        dispatch( classAction.fetchClassSuccess(res) )
+        generalUtils.showSuccessNotification('Grades approved for this class')
+      }, error => {
+        generalUtils.showErrorNotification(error.message)
+      })
+    }
+
   }
 
 }

@@ -1,4 +1,4 @@
-import { FETCH_CLASSES_SUCCESS, FETCH_CLASS_SUCCESS } from '../actions/class';
+import { FETCH_CLASSES_SUCCESS, FETCH_CLASS_SUCCESS, UPDATE_GRADES_SUCCESS } from '../actions/class';
 
 const initialState = {
     data: [],
@@ -23,6 +23,10 @@ export default function classes(state = initialState, action) {
           return Object.assign({}, state, {
               class: action.payload
           })
+    case UPDATE_GRADES_SUCCESS:
+        return Object.assign({}, state, {
+            class: action.payload
+        })
       default:
           return state;
   }

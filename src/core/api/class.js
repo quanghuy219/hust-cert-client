@@ -9,5 +9,14 @@ export const classApi = {
 
 	getClass: (classID) => {
 		return httpRequest.get(`/classes/${classID}`);
+	},
+
+	submitGrades: (classID, grades) => {
+		return httpRequest.post(`/classes/${classID}/grades`, grades)
+	},
+
+	approveGrades: (classID) => {
+		const params = {action: "approve_grades"};
+		return httpRequest.put(`/classes/${classID}`, params)
 	}
 }

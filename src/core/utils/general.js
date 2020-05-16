@@ -102,6 +102,14 @@ export const generalUtils = {
 
 	showErrorNotification: (errorMessage) => {
 		toast.error(errorMessage, {
+			position: 'bottom-left',
+			autoClose: 3000
+		})
+	},
+
+	showSuccessNotification: (message) => {
+		toast.success(message, {
+			autoClose: 3000,
 			position: 'bottom-left'
 		})
 	},

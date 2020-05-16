@@ -12,28 +12,65 @@ import { Role } from '../../constants'
 import './style.css';
 
 class Enrollment extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
 			updateGrade: false,
+			classID: null,
 			class: {
 				enrollments: [],
 			}
 		};
+		this.handleUpdateStudentGrade = this.handleUpdateStudentGrade.bind(this)
+		this.submitGrades = this.submitGrades.bind(this)
+		this.approveGrades = this.approveGrades.bind(this)
 	}
 
 	componentDidMount() {
 		const classID = this.props.match.params.classID;
+		this.setState({
+			classID: classID
+		})
 		this.props.fetchClass(classID)
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.class) {
 			this.setState({
-				class: nextProps.class
+				class: nextProps.class,
+				updateGrade: false
 			})
 		}
+	}
+
+	handleUpdateStudentGrade(e, studentID, type) {
+		let enrollments = Object.assign(this.state.class.enrollments)
+		enrollments.forEach(element => {
+			if (element.student.id === studentID) {
+				element[type] = e.target.value
+			}
+		});
+		let classData = Object.assign(this.state.class)
+		classData.enrollments = enrollments
+		this.setState({
+			class: classData
+		})
+	}
+
+	submitGrades() {
+		const enrollments = this.state.class.enrollments;
+		const grades = enrollments.map(e => {
+			return {
+				student_id: e.student.id,
+				midterm: e.midterm,
+				final: e.final
+			}
+		})
+		this.props.submitGrades(this.state.classID, grades)
+	}
+
+	approveGrades() {
+		this.props.approveGrades(this.state.classID)
 	}
 
 	render() {
@@ -65,13 +102,15 @@ class Enrollment extends React.Component {
 							<Button color="info" disabled={this.props.class.grade_approved} onClick={() => this.setState({updateGrade: true})} >Update Grades</Button> :
 							(
 							<span>
-								<Button color="info" disabled={this.props.class.grade_approved} onClick={() => this.setState({updateGrade: true})} >Submit</Button>
+								<Button color="info" disabled={this.props.class.grade_approved} onClick={this.submitGrades} >Submit</Button>
 								<Button color="danger" disabled={this.props.class.grade_approved} onClick={() => this.setState({updateGrade: false})} >Cancel</Button>
 							</span>
 							)
 					}
-					
-					{Role.getAdminRoles().includes(this.props.auth.role) && <Button color="info" disabled={this.props.class.grade_approved || !this.props.class.grade_submitted} >Approve Grades</Button>}
+
+					{
+						Role.getAdminRoles().includes(this.props.auth.role) && 
+						<Button color="info" disabled={this.props.class.grade_approved || !this.props.class.grade_submitted} onClick={this.approveGrades}>Approve Grades</Button>}
 				</div>
 
 				<Table className="class-enrollments">
@@ -91,17 +130,21 @@ class Enrollment extends React.Component {
 								<tr key={row.student.id}>
 									<td>{row.student.id}</td>
 									<td>{row.student.name}</td>
-									<td>
+									<td className="col-grade">
 										{
 											this.state.updateGrade ?
-											<Input className="grade-input" /> :
+											<Input className="grade-input" name="midterm" value={row.midterm}
+												onChange={(e) => this.handleUpdateStudentGrade(e, row.student.id, "midterm")} 
+											/> :
 											row.midterm
 										}
 									</td>
-									<td>
+									<td className="col-grade">
 									{
 											this.state.updateGrade ?
-											<Input className="grade-input" /> :
+											<Input className="grade-input" name="final" value={row.final}
+												onChange={(e) => this.handleUpdateStudentGrade(e, row.student.id, "final") }
+											/> :
 											row.final
 										}
 									</td>
@@ -125,6 +168,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
 	fetchClass: classAction.fetchClass,
+	submitGrades: classAction.submitGrades,
+	approveGrades: classAction.approveGrades
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Enrollment);
