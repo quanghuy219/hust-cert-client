@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
@@ -41,11 +41,7 @@ class LinksGroup extends Component {
     if (!childrenLinks) {
       return (
         <li className={cx(s.headerLink, className)}>
-          <NavLink
-            to={headerLink}
-            activeClassName={s.headerLinkActive}
-            exact
-          >
+          <NavLink to={headerLink} activeClassName={s.headerLinkActive} exact>
             <div>
               {glyph && <Icon glyph={glyph} />}
               <span>{header}</span>
@@ -58,39 +54,41 @@ class LinksGroup extends Component {
     return (
       <Route
         path={headerLink}
-        children={({match}) => {
+        children={({ match }) => {
           return (
             <li className={cx(s.headerLink, className)}>
               <a
-                className={cx({[s.headerLinkActive]: !!match && match.url.indexOf(headerLink) !== -1 })}
-                onClick={() => this.setState({isOpen: !isOpen})}
+                className={cx({
+                  [s.headerLinkActive]: !!match && match.url.indexOf(headerLink) !== -1,
+                })}
+                onClick={() => this.setState({ isOpen: !isOpen })}
               >
                 <div>
                   {glyph && <Icon glyph={glyph} />}
                   <span>{header}</span>
                 </div>
-                <b className={cx('fa fa-angle-left arrow', s.arrow, {[s.arrowActive]: isOpen})} />
+                <b className={cx('fa fa-angle-left arrow', s.arrow, { [s.arrowActive]: isOpen })} />
               </a>
               {/* eslint-enable */}
               <Collapse className={s.panel} isOpen={isOpen}>
                 <ul>
                   {childrenLinks &&
-                  childrenLinks.map(child => (
-                    <li key={child.name}>
-                      <NavLink
-                        to={child.link}
-                        exact
-                        onClick={() =>
-                          this.setState({
-                            isOpen: true,
-                          })
-                        }
-                        activeClassName={s.headerLinkActive}
-                      >
-                        {child.name}
-                      </NavLink>
-                    </li>
-                  ))}
+                    childrenLinks.map((child) => (
+                      <li key={child.name}>
+                        <NavLink
+                          to={child.link}
+                          exact
+                          onClick={() =>
+                            this.setState({
+                              isOpen: true,
+                            })
+                          }
+                          activeClassName={s.headerLinkActive}
+                        >
+                          {child.name}
+                        </NavLink>
+                      </li>
+                    ))}
                 </ul>
               </Collapse>
             </li>

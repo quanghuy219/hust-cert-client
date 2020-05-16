@@ -1,5 +1,5 @@
-import { lcStorage } from '../core/utils/localStorage'
-import { loginApi } from '../core/api'
+import { lcStorage } from '../core/utils/localStorage';
+import { loginApi } from '../core/api';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -9,68 +9,73 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 export function logoutUser() {
-  return dispatch => {
+  return (dispatch) => {
     localStorage.removeItem('id_token');
     document.cookie = 'id_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
 }
 
 export const loginAction = {
-	LOGIN_SUCCESS_STATE: 'LOGIN_SUCCESS_STATE',
-	LOGIN_ERROR_STATE: 'LOGIN_ERROR_STATE',
+  LOGIN_SUCCESS_STATE: 'LOGIN_SUCCESS_STATE',
+  LOGIN_ERROR_STATE: 'LOGIN_ERROR_STATE',
 
-	loginSuccess: res => ({
-		type: LOGIN_SUCCESS,
-		payload: res
-	}),
+  loginSuccess: (res) => ({
+    type: LOGIN_SUCCESS,
+    payload: res,
+  }),
 
-	loginError: error => ({
-		type: LOGIN_FAILURE,
-		payload: error
-	}),
+  loginError: (error) => ({
+    type: LOGIN_FAILURE,
+    payload: error,
+  }),
 
-	logoutUser: () => {
-		return dispatch => {
-		localStorage.removeItem('access_token');
-		localStorage.removeItem('role');
-		localStorage.removeItem('user');
-		dispatch({
-			type: LOGOUT_SUCCESS
-		})
-		};
-	},
+  logoutUser: () => {
+    return (dispatch) => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('user');
+      dispatch({
+        type: LOGOUT_SUCCESS,
+      });
+    };
+  },
 
-	handleLoginSuccess: (res) => {
-		const {data, access_token, role} = res;
-		lcStorage.set('user', data);
-		lcStorage.set('access_token', access_token);
-		lcStorage.set('role', role);
-	},
+  handleLoginSuccess: (res) => {
+    const { data, access_token, role } = res;
+    lcStorage.set('user', data);
+    lcStorage.set('access_token', access_token);
+    lcStorage.set('role', role);
+  },
 
-	login: ( email, password, role, router ) => {
-		return async function ( dispatch ) {
-      dispatch({type: LOGIN_REQUEST});
-			await loginApi.login(email, password, role).then( res => {
-				loginAction.handleLoginSuccess(res)
-				dispatch (loginAction.loginSuccess (res))
-			}, error => {
-				console.log(error);
-				dispatch (loginAction.loginError(error))
-      })			
-		}
-	},
+  login: (email, password, role, router) => {
+    return async function (dispatch) {
+      dispatch({ type: LOGIN_REQUEST });
+      await loginApi.login(email, password, role).then(
+        (res) => {
+          loginAction.handleLoginSuccess(res);
+          dispatch(loginAction.loginSuccess(res));
+        },
+        (error) => {
+          console.log(error);
+          dispatch(loginAction.loginError(error));
+        },
+      );
+    };
+  },
 
-	studentLogin: (id, password) => {
-		return async function ( dispatch ) {
-			dispatch({type: LOGIN_REQUEST});
-				  await loginApi.studentLogin(id, password).then( res => {
-					  loginAction.handleLoginSuccess(res)
-					  dispatch (loginAction.loginSuccess (res))
-				  }, error => {
-					  console.log(error);
-					  dispatch (loginAction.loginError(error))
-				})			
-			  }
-	}
-
-}
+  studentLogin: (id, password) => {
+    return async function (dispatch) {
+      dispatch({ type: LOGIN_REQUEST });
+      await loginApi.studentLogin(id, password).then(
+        (res) => {
+          loginAction.handleLoginSuccess(res);
+          dispatch(loginAction.loginSuccess(res));
+        },
+        (error) => {
+          console.log(error);
+          dispatch(loginAction.loginError(error));
+        },
+      );
+    };
+  },
+};

@@ -24,3 +24,5 @@ yarn-error.log*
 
 # Editors and IDEs
 .idea
+.npmrc
+.yarnrc

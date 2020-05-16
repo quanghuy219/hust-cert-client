@@ -41,17 +41,17 @@ class Header extends React.Component {
   state = { isOpen: false };
 
   toggleDropdown = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       isOpen: !prevState.isOpen,
     }));
-  }
+  };
 
   doLogout = () => {
     this.props.logout();
-  }
+  };
 
   render() {
-    const {isOpen} = this.state;
+    const { isOpen } = this.state;
     return (
       <Navbar className={s.root}>
         <Nav>
@@ -74,20 +74,22 @@ class Header extends React.Component {
         <Nav className="ml-auto">
           <Dropdown isOpen={isOpen} toggle={this.toggleDropdown}>
             <DropdownToggle nav>
-              <img className={cx('rounded-circle mr-sm', s.adminPhoto)} src={photo} alt="administrator" />
+              <img
+                className={cx('rounded-circle mr-sm', s.adminPhoto)}
+                src={photo}
+                alt="administrator"
+              />
               <span className="text-body">{this.props.auth.name}</span>
-              <i className={cx('fa fa-angle-down ml-sm', s.arrow, {[s.arrowActive]: isOpen})} />
+              <i className={cx('fa fa-angle-down ml-sm', s.arrow, { [s.arrowActive]: isOpen })} />
             </DropdownToggle>
-            <DropdownMenu style={{width: '100%'}}>
+            <DropdownMenu style={{ width: '100%' }}>
               <DropdownItem>
                 <NavLink to="/app/posts">Posts</NavLink>
               </DropdownItem>
               <DropdownItem>
                 <NavLink to="/app/profile">Profile</NavLink>
               </DropdownItem>
-              <DropdownItem onClick={this.doLogout}>
-                Logout
-              </DropdownItem>
+              <DropdownItem onClick={this.doLogout}>Logout</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </Nav>
@@ -99,15 +101,12 @@ class Header extends React.Component {
 function mapStateToProps(state) {
   return {
     init: state.runtime.initialNow,
-    auth: state.auth
+    auth: state.auth,
   };
 }
 
 const mapDispatchToProps = {
-  logout: loginAction.logoutUser
-}
+  logout: loginAction.logoutUser,
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-) (Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

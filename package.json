@@ -104,7 +104,8 @@
     "build": "cross-env PUBLIC_URL='/react-dashboard' node scripts/build.js",
     "test": "node scripts/test.js",
     "server": "node server/start.js",
-    "dev": "cross-env NODE_ENV=development run-p server start"
+    "dev": "cross-env NODE_ENV=development run-p server start",
+    "pretty": "prettier --write \"**/*.js\""
   },
   "proxy": "http://localhost:5000",
   "eslintConfig": {
@@ -182,6 +183,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
-    "cross-env": "^6.0.3"
+    "cross-env": "^6.0.3",
+    "prettier": "2.0.5"
   }
 }

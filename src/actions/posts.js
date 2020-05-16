@@ -69,9 +69,7 @@ export function createPost(postData) {
     },
     body: JSON.stringify({
       query: `mutation {
-                addPost(title: "${postData.title}", content: "${
-        postData.content
-      }"){
+                addPost(title: "${postData.title}", content: "${postData.content}"){
                   id,
                   title,
                   content
@@ -81,27 +79,27 @@ export function createPost(postData) {
     credentials: 'include',
   };
 
-  return dispatch => {
+  return (dispatch) => {
     // We dispatch requestCreatePost to kickoff the call to the API
     dispatch(requestCreatePost(postData));
-    if(process.env.NODE_ENV === "development") {
-    return fetch('/graphql', config)
-      .then(response => response.json().then(post => ({ post, response })))
-      .then(({ post, response }) => {
-        if (!response.ok) {
-          // If there was a problem, we want to
-          // dispatch the error condition
-          dispatch(createPostError(post.message));
-          return Promise.reject(post);
-        }
-        // Dispatch the success action
-        dispatch(createPostSuccess(post));
-        setTimeout(() => {
-          dispatch(createPostInitial());
-        }, 5000);
-        return Promise.resolve(post);
-      })
-      .catch(err => console.error('Error: ', err));
+    if (process.env.NODE_ENV === 'development') {
+      return fetch('/graphql', config)
+        .then((response) => response.json().then((post) => ({ post, response })))
+        .then(({ post, response }) => {
+          if (!response.ok) {
+            // If there was a problem, we want to
+            // dispatch the error condition
+            dispatch(createPostError(post.message));
+            return Promise.reject(post);
+          }
+          // Dispatch the success action
+          dispatch(createPostSuccess(post));
+          setTimeout(() => {
+            dispatch(createPostInitial());
+          }, 5000);
+          return Promise.resolve(post);
+        })
+        .catch((err) => console.error('Error: ', err));
     } else {
       dispatch(createPostError(''));
       return Promise.reject();
@@ -122,12 +120,12 @@ export function fetchPosts() {
     credentials: 'include',
   };
 
-  return dispatch => {
+  return (dispatch) => {
     dispatch(requestFetchPosts());
 
     return fetch('/graphql', config)
-      .then(response =>
-        response.json().then(responseJson => ({
+      .then((response) =>
+        response.json().then((responseJson) => ({
           posts: responseJson.data.posts,
           responseJson,
         })),
@@ -143,6 +141,6 @@ export function fetchPosts() {
         dispatch(fetchPostsSuccess(posts));
         return Promise.resolve(posts);
       })
-      .catch(err => console.error('Error: ', err));
+      .catch((err) => console.error('Error: ', err));
   };
 }
