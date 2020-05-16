@@ -1,7 +1,4 @@
-import {
-  GraphQLSchema as Schema,
-  GraphQLObjectType as ObjectType,
-} from 'graphql';
+import { GraphQLSchema as Schema, GraphQLObjectType as ObjectType } from 'graphql';
 
 import me from './queries/me';
 import news from './queries/news';
@@ -27,8 +24,6 @@ const schemaConfig = {
 //     addPost,
 //   },
 // });
-
-
 
 const schema = new Schema(schemaConfig);
 

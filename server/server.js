@@ -1,26 +1,25 @@
-import express from 'express'
+import express from 'express';
 import helmet from 'helmet';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
-import schema from '../src/data/schema'
+import schema from '../src/data/schema';
 import dotenv from 'dotenv';
 import config from './config';
-
 
 const app = express();
 app.use(helmet());
 app.use(cookieParser());
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 dotenv.config();
 app.use(
   expressJwt({
     secret: config.auth.jwt.secret,
     credentialsRequired: false,
-    getToken: req => req.cookies.id_token,
+    getToken: (req) => req.cookies.id_token,
   }),
 );
 
@@ -51,9 +50,9 @@ app.use(
   '/graphql',
   expressJwt({
     secret: config.auth.jwt.secret,
-    getToken: req => req.cookies.id_token,
+    getToken: (req) => req.cookies.id_token,
   }),
-  expressGraphQL(req => ({
+  expressGraphQL((req) => ({
     schema,
     graphiql: process.env.REACT_APP_NODE_ENV,
     rootValue: { request: req },
@@ -63,10 +62,13 @@ app.use(
 
 const PORT = process.env.REACT_APP_PORT || 5000;
 
-const server = app.listen(PORT, console.log(`Server running in ${process.env.REACT_APP_NODE_ENV} mode on port ${PORT}`))
+const server = app.listen(
+  PORT,
+  console.log(`Server running in ${process.env.REACT_APP_NODE_ENV} mode on port ${PORT}`),
+);
 
 process.on('unhandledRejection', (err, promise) => {
-  console.log(`Unhandled Rejection: ${err.message}`)
-  // Close server 
-  server.close(() => process.exit(1))
-})
+  console.log(`Unhandled Rejection: ${err.message}`);
+  // Close server
+  server.close(() => process.exit(1));
+});

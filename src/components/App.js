@@ -13,39 +13,26 @@ import LayoutComponent from '../components/Layout';
 import Login from '../pages/login';
 import Register from '../pages/register';
 import { logoutUser } from '../actions/user';
-import { Role, ACTOR } from '../constants'
+import { Role } from '../constants';
 
-const PrivateRoute = ({dispatch, component, isAuthenticated, role, ...rest }) => {
-    if (!isAuthenticated || !Role.getAll().includes(role)) {
-        dispatch(logoutUser());
-        return (<Redirect to="/login"/>)
-		} else {
-        return ( // eslint-disable-line
-            <Route {...rest} render={props => (React.createElement(component, props))}/>
-        );
-    }
+const PrivateRoute = ({ dispatch, component, isAuthenticated, role, ...rest }) => {
+  if (!isAuthenticated || !Role.getAll().includes(role)) {
+    dispatch(logoutUser());
+    return <Redirect to="/login" />;
+  } else {
+    return (
+      // eslint-disable-line
+      <Route {...rest} render={(props) => React.createElement(component, props)} />
+    );
+  }
 };
 
-const CloseButton = ({closeToast}) => <i onClick={closeToast} className="la la-close notifications-close"/>
+const CloseButton = ({ closeToast }) => (
+  <i onClick={closeToast} className="la la-close notifications-close" />
+);
 
 class App extends React.PureComponent {
-
-	userActor() {
-		if ( Role.getAdminRoles().includes(this.props.role) ) {
-      return ACTOR.ADMIN;
-    }
-    else if (this.props.role === Role.LECTURER) {
-      return ACTOR.LECTURER;
-    }
-    else {
-      return ACTOR.STUDENT
-    }
-	}
-
   render() {
-		const actor = this.userActor();
-		const redirectedRoute = `/home/${actor}`;
-
     return (
         <div>
             <ToastContainer
@@ -74,7 +61,7 @@ class App extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   role: state.auth.role,
   isAuthenticated: state.auth.isAuthenticated,
 });

@@ -67,23 +67,21 @@ class Layout extends React.Component {
         <Route path="/home/tables" exact component={Tables} />
         <Route component={NotFound}/>
       </Switch>
-    )
+    );
     const studentRoute = (
       <Switch>
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/tables" exact component={Tables} />
         <Route component={NotFound}/>
       </Switch>
-    )
+    );
 
-    if ( Role.getAdminRoles().includes(this.props.role) ) {
+    if (Role.getAdminRoles().includes(this.props.role)) {
       return adminRoute;
-    }
-    else if (this.props.role === Role.LECTURER) {
-      return lecturerRoute
-    }
-    else {
-      return studentRoute
+    } else if (this.props.role === Role.LECTURER) {
+      return lecturerRoute;
+    } else {
+      return studentRoute;
     }
   }
 
@@ -91,9 +89,7 @@ class Layout extends React.Component {
     return (
       <div className={s.root}>
         <Sidebar />
-        <div
-          className={cx(s.wrap, {[s.sidebarOpen]: this.state.sidebarOpen})}
-        >
+        <div className={cx(s.wrap, { [s.sidebarOpen]: this.state.sidebarOpen })}>
           <Header
             sidebarToggle={() =>
               this.setState({
@@ -101,9 +97,7 @@ class Layout extends React.Component {
               })
             }
           />
-          <main className={s.content}>
-            {this.renderRouter()}
-          </main>
+          <main className={s.content}>{this.renderRouter()}</main>
           <Footer />
         </div>
       </div>
@@ -113,12 +107,12 @@ class Layout extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    role: state.auth.role
+    role: state.auth.role,
   };
-}
+};
 
 const mapDispatchToProps = {
-  logout: loginAction.logoutUser
-}
+  logout: loginAction.logoutUser,
+};
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps) (Layout));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

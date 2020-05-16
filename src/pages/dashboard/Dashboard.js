@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import cx from 'classnames';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
@@ -28,7 +26,7 @@ class Dashboard extends Component {
   }
 
   fetchClasses() {
-    if (Role.getAdminRoles().includes(this.props.auth.role) ) {
+    if (Role.getAdminRoles().includes(this.props.auth.role)) {
       this.props.fetchAllClasses(this.state.page)
     } else {
       this.props.fetchClassesByLecturer(this.state.page)
@@ -48,7 +46,6 @@ class Dashboard extends Component {
     return (
       <div className={s.root}>
         <h1 className="mb-lg">Dashboard</h1>
-
         <Table borderless className={s.mainTable}>
           <thead>
             <tr>

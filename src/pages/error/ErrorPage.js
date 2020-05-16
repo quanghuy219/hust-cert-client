@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 class ErrorPage extends React.Component {
   static propTypes = {
     error: PropTypes.shape({

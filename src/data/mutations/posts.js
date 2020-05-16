@@ -1,7 +1,4 @@
-import {
-  GraphQLString as StringType,
-  GraphQLNonNull as NonNull,
-} from 'graphql';
+import { GraphQLString as StringType, GraphQLNonNull as NonNull } from 'graphql';
 
 import PostType from '../types/PostType';
 import Post from '../models/Post';
