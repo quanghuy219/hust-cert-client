@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -18,9 +18,9 @@ import {
   DropdownMenu,
   DropdownToggle,
   DropdownItem,
-  Table
+  Table,
 } from 'reactstrap';
-import { mock } from './mock'
+import { mock } from './mock';
 
 import Widget from '../../components/Widget';
 
@@ -42,24 +42,24 @@ class Dashboard extends Component {
   };
 
   state = {
-    isDropdownOpened: false
+    isDropdownOpened: false,
   };
 
   componentDidMount() {
-    if(process.env.NODE_ENV === "development") {
-      this.props.dispatch(fetchPosts());      
+    if (process.env.NODE_ENV === 'development') {
+      this.props.dispatch(fetchPosts());
     }
   }
 
   formatDate = (str) => {
-    return str.replace(/,.*$/,"");
-  }
+    return str.replace(/,.*$/, '');
+  };
 
   toggleDropdown = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       isDropdownOpened: !prevState.isDropdownOpened,
     }));
-  }
+  };
 
   render() {
     return (
@@ -82,8 +82,7 @@ class Dashboard extends Component {
                     />
                   </div>
                   <h5 className="mt-0 mb-3">
-                    <i className="fa fa-user mr-xs opacity-70" />{' '}
-                    Users
+                    <i className="fa fa-user mr-xs opacity-70" /> Users
                   </h5>
                 </div>
               }
@@ -136,39 +135,28 @@ class Dashboard extends Component {
           </Col>
           <Col sm={12} md={6}>
             <Widget title="Alerts">
-              <Alert
-                className="alert-sm"
-                color="warning"
-              >
-                <span className="fw-semi-bold">Warning:</span> Best check yo
-                self, you&#39;re not looking too good.
+              <Alert className="alert-sm" color="warning">
+                <span className="fw-semi-bold">Warning:</span> Best check yo self, you&#39;re not
+                looking too good.
               </Alert>
-              <Alert
-                className="alert-sm"
-                color="success"
-              >
-                <span className="fw-semi-bold">Success:</span> You successfully
-                read this important alert message.
+              <Alert className="alert-sm" color="success">
+                <span className="fw-semi-bold">Success:</span> You successfully read this important
+                alert message.
               </Alert>
-              <Alert
-                className="alert-sm"
-                color="info"
-              >
-                <span className="fw-semi-bold">Info:</span> This alert needs
-                your attention, but it&#39;s not super important.
+              <Alert className="alert-sm" color="info">
+                <span className="fw-semi-bold">Info:</span> This alert needs your attention, but
+                it&#39;s not super important.
               </Alert>
-              <Alert
-                className="alert-sm clearfix"
-                color="danger"
-              >
-                <span className="fw-semi-bold">Danger:</span> Change this and
-                that and try again.
+              <Alert className="alert-sm clearfix" color="danger">
+                <span className="fw-semi-bold">Danger:</span> Change this and that and try again.
                 <span className="pull-right mr-sm">
                   <Button color="danger" size="sm">
                     Take this action
                   </Button>
                   <span className="px-2"> or </span>
-                  <Button color="default" size="sm">Cancel</Button>
+                  <Button color="default" size="sm">
+                    Cancel
+                  </Button>
                 </span>
               </Alert>
             </Widget>
@@ -180,7 +168,9 @@ class Dashboard extends Component {
               title={
                 <div>
                   <div className="pull-right mt-n-xs">
-                    <Link to="/home/main" className="td-underline fs-sm">Options</Link>
+                    <Link to="/home/main" className="td-underline fs-sm">
+                      Options
+                    </Link>
                   </div>
                   <h5 className="mt-0 mb-0">
                     Recent posts{' '}
@@ -188,44 +178,44 @@ class Dashboard extends Component {
                       5
                     </Badge>
                   </h5>
-                  <p className="fs-sm mb-0 text-muted">
-                    posts, that have been published recently
-                  </p>
+                  <p className="fs-sm mb-0 text-muted">posts, that have been published recently</p>
                 </div>
               }
             >
               <table className="table table-sm table-no-border mb-0">
                 <tbody>
-                {this.props.posts &&
-                this.props.posts.map(post => (
-                  <tr key={post.id}>
-                    <td>{this.formatDate(new Date(post.updatedAt).toLocaleString())}</td>
-                    <td>
-                      <Link to="/home/posts">{post.title}</Link>
-                    </td>
-                  </tr>
-                ))}
-                {this.props.posts &&
-                !this.props.posts.length && (
-                  mock.map(post => (
-                    <tr key={post.id}>
-                      <td>{post.updatedAt}</td>
-                      <td>
-                        <Link to="/home/posts">{post.title}</Link>
-                      </td>
+                  {this.props.posts &&
+                    this.props.posts.map((post) => (
+                      <tr key={post.id}>
+                        <td>{this.formatDate(new Date(post.updatedAt).toLocaleString())}</td>
+                        <td>
+                          <Link to="/home/posts">{post.title}</Link>
+                        </td>
+                      </tr>
+                    ))}
+                  {this.props.posts &&
+                    !this.props.posts.length &&
+                    mock.map((post) => (
+                      <tr key={post.id}>
+                        <td>{post.updatedAt}</td>
+                        <td>
+                          <Link to="/home/posts">{post.title}</Link>
+                        </td>
+                      </tr>
+                    ))}
+                  {this.props.isFetching && (
+                    <tr>
+                      <td colSpan="100">Loading...</td>
                     </tr>
-                  ))
-                )}
-                {this.props.isFetching && (
-                  <tr>
-                    <td colSpan="100">Loading...</td>
-                  </tr>
-                )}
+                  )}
                 </tbody>
               </table>
               <div className="d-flex justify-content-end">
                 <Link to="/home/posts" className="btn btn-default">
-                  View all Posts <Badge className="ml-xs" color="danger">13</Badge>
+                  View all Posts{' '}
+                  <Badge className="ml-xs" color="danger">
+                    13
+                  </Badge>
                 </Link>
               </div>
             </Widget>
@@ -233,20 +223,25 @@ class Dashboard extends Component {
           <Col sm={6}>
             <ListGroup>
               <Link to="/home" className="list-group-item">
-                <i className="fa fa-phone mr-xs text-secondary" />{' '}
-                Incoming calls <Badge className="ml-xs" color="danger">3</Badge>
+                <i className="fa fa-phone mr-xs text-secondary" /> Incoming calls{' '}
+                <Badge className="ml-xs" color="danger">
+                  3
+                </Badge>
               </Link>
               <Link to="/home" className="list-group-item">
-                <i className="fa fa-bell-o mr-xs text-secondary" />{' '}
-                Notifications <Badge className="ml-xs" color="warning">6</Badge>
+                <i className="fa fa-bell-o mr-xs text-secondary" /> Notifications{' '}
+                <Badge className="ml-xs" color="warning">
+                  6
+                </Badge>
               </Link>
               <Link to="/home" className="list-group-item">
-                <i className="fa fa-comment-o mr-xs text-secondary" />{' '}
-                Messages <Badge className="ml-xs" color="success">18</Badge>
+                <i className="fa fa-comment-o mr-xs text-secondary" /> Messages{' '}
+                <Badge className="ml-xs" color="success">
+                  18
+                </Badge>
               </Link>
               <Link to="/home" className="list-group-item">
-                <i className="fa fa-eye mr-xs text-secondary" />{' '}
-                Visits total
+                <i className="fa fa-eye mr-xs text-secondary" /> Visits total
               </Link>
               <Link to="/home" className="list-group-item">
                 <i className="fa fa-cloud mr-xs text-secondary" /> Inbox{' '}
@@ -289,11 +284,7 @@ class Dashboard extends Component {
               </ButtonGroup>
               <p className="mb-0">
                 For more components please checkout{' '}
-                <a
-                  href="https://reactstrap.github.io/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="https://reactstrap.github.io/" target="_blank" rel="noopener noreferrer">
                   reactstrap documentation
                 </a>
               </p>

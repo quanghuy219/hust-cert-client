@@ -1,5 +1,3 @@
-import { BaseConfig } from "../configs/base";
+import { BaseConfig } from '../configs/base';
 
-export class TestConfig extends BaseConfig {
-    
-}
+export class TestConfig extends BaseConfig {}

@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import {
   Row,
   Col,
@@ -17,7 +17,7 @@ import Widget from '../../components/Widget';
 import s from './Profile.module.scss';
 
 class Profile extends PureComponent {
-  onSubmit(e) { 
+  onSubmit(e) {
     e.preventDefault();
   }
 
@@ -41,15 +41,15 @@ class Profile extends PureComponent {
               <Form onSubmit={this.onSubmit}>
                 <FormGroup>
                   <Label for="input-name">Name</Label>
-                  <Input bsSize="lg" type="text" name="name" id="input-name"/>
+                  <Input bsSize="lg" type="text" name="name" id="input-name" />
                 </FormGroup>
                 <FormGroup>
                   <Label for="input-email">Email</Label>
-                  <Input bsSize="lg" type="email" name="email" id="input-email"/>
+                  <Input bsSize="lg" type="email" name="email" id="input-email" />
                 </FormGroup>
                 <FormGroup>
                   <Label for="input-password">Password</Label>
-                  <Input bsSize="lg" type="password" name="password" id="input-password"/>
+                  <Input bsSize="lg" type="password" name="password" id="input-password" />
                 </FormGroup>
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
@@ -60,7 +60,9 @@ class Profile extends PureComponent {
                     <span>Remember me</span>
                   </div>
                   <ButtonGroup className="pull-right">
-                    <Button className="ml-sm" color="default">Cancel</Button>
+                    <Button className="ml-sm" color="default">
+                      Cancel
+                    </Button>
                     <Button color="danger">Save</Button>
                   </ButtonGroup>
                 </div>
@@ -69,7 +71,7 @@ class Profile extends PureComponent {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

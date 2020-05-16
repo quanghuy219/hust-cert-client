@@ -8,7 +8,7 @@ import settings from './settings.svg';
 import notification from './notification.svg';
 import mail from './mail.svg';
 
-export default { 
+export default {
   components,
   dashboard,
   notifications,
@@ -18,4 +18,4 @@ export default {
   settings,
   notification,
   mail,
-}
+};
