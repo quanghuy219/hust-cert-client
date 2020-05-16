@@ -1,86 +1,98 @@
-import { classApi, lecturerApi } from '../core/api'
-import { generalUtils } from '../core/utils/general'
+import { classApi, lecturerApi } from '../core/api';
+import { generalUtils } from '../core/utils/general';
 
-export const FETCH_CLASSES_SUCCESS = 'FETCH_CLASSES_SUCCESS'
-export const FETCH_CLASS_SUCCESS = 'FETCH_CLASS_SUCCESS'
-export const UPDATE_GRADES_SUCCESS = 'UPDATE_GRADES_SUCCESS'
+export const FETCH_CLASSES_SUCCESS = 'FETCH_CLASSES_SUCCESS';
+export const FETCH_CLASS_SUCCESS = 'FETCH_CLASS_SUCCESS';
+export const UPDATE_GRADES_SUCCESS = 'UPDATE_GRADES_SUCCESS';
 
 export const classAction = {
-
-  fetchClassesSuccess: (res) => ({
+  fetchClassesSuccess: res => ({
     type: FETCH_CLASSES_SUCCESS,
     payload: {
       data: res.data,
       itemsPerPage: res.items_per_page,
-      totalItems: res.total_items
-    }
+      totalItems: res.total_items,
+    },
   }),
 
-  fetchClassSuccess: (res) => ({
+  fetchClassSuccess: res => ({
     type: FETCH_CLASS_SUCCESS,
-    payload: res
+    payload: res,
   }),
 
-  updateGradesSuccess: (res) => ({
+  updateGradesSuccess: res => ({
     type: UPDATE_GRADES_SUCCESS,
-    payload: res
+    payload: res,
   }),
 
   fetchAllClasses: (page = 1) => {
-    return async function (dispatch) {
-      await classApi.getClasses(page).then(res => {
-        dispatch( classAction.fetchClassesSuccess(res) )
-      }, error => {
-        generalUtils.showErrorNotification(error.message)
-        console.log(error)
-      })
-    }
+    return async function(dispatch) {
+      await classApi.getClasses(page).then(
+        res => {
+          dispatch(classAction.fetchClassesSuccess(res));
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message);
+          console.log(error);
+        },
+      );
+    };
   },
 
   fetchClassesByLecturer: (page = 1) => {
-    return async function (dispatch) {
-      await lecturerApi.getClasses(page).then(res => {
-        dispatch( classAction.fetchClassesSuccess(res) )
-      }, error => {
-        generalUtils.showErrorNotification(error.message)
-        console.log(error);
-      })
-    }
+    return async function(dispatch) {
+      await lecturerApi.getClasses(page).then(
+        res => {
+          dispatch(classAction.fetchClassesSuccess(res));
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message);
+          console.log(error);
+        },
+      );
+    };
   },
 
   fetchClass: (classID, router) => {
-    return async function (dispatch) {
-      await classApi.getClass(classID).then(res => {
-        dispatch( classAction.fetchClassSuccess(res) )
-      }, error => {
-        generalUtils.showErrorNotification(error.message)
-        router.push('/home');
-        console.log(error)
-      })
-    }
+    return async function(dispatch) {
+      await classApi.getClass(classID).then(
+        res => {
+          dispatch(classAction.fetchClassSuccess(res));
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message);
+          router.push('/home');
+          console.log(error);
+        },
+      );
+    };
   },
 
   submitGrades: (classID, grades) => {
-    return async function (dispatch) {
-      classApi.submitGrades(classID, grades).then(res => {
-        dispatch( classAction.updateGradesSuccess(res) )
-        generalUtils.showSuccessNotification('Grades updated successfully')
-      }, error => {
-        generalUtils.showErrorNotification(error.message)
-      })
-    }
+    return async function(dispatch) {
+      classApi.submitGrades(classID, grades).then(
+        res => {
+          dispatch(classAction.updateGradesSuccess(res));
+          generalUtils.showSuccessNotification('Grades updated successfully');
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message);
+        },
+      );
+    };
   },
 
-  approveGrades: (classID) => {
-    return async function (dispatch) {
-      classApi.approveGrades(classID).then(res => {
-        dispatch( classAction.fetchClassSuccess(res) )
-        generalUtils.showSuccessNotification('Grades approved for this class')
-      }, error => {
-        generalUtils.showErrorNotification(error.message)
-      })
-    }
-
-  }
-
-}
+  approveGrades: classID => {
+    return async function(dispatch) {
+      classApi.approveGrades(classID).then(
+        res => {
+          dispatch(classAction.fetchClassSuccess(res));
+          generalUtils.showSuccessNotification('Grades approved for this class');
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message);
+        },
+      );
+    };
+  },
+};

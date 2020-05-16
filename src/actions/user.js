@@ -9,7 +9,7 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 export function logoutUser() {
-  return (dispatch) => {
+  return dispatch => {
     localStorage.removeItem('id_token');
     document.cookie = 'id_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
@@ -19,18 +19,18 @@ export const loginAction = {
   LOGIN_SUCCESS_STATE: 'LOGIN_SUCCESS_STATE',
   LOGIN_ERROR_STATE: 'LOGIN_ERROR_STATE',
 
-  loginSuccess: (res) => ({
+  loginSuccess: res => ({
     type: LOGIN_SUCCESS,
     payload: res,
   }),
 
-  loginError: (error) => ({
+  loginError: error => ({
     type: LOGIN_FAILURE,
     payload: error,
   }),
 
   logoutUser: () => {
-    return (dispatch) => {
+    return dispatch => {
       localStorage.removeItem('access_token');
       localStorage.removeItem('role');
       localStorage.removeItem('user');
@@ -40,7 +40,7 @@ export const loginAction = {
     };
   },
 
-  handleLoginSuccess: (res) => {
+  handleLoginSuccess: res => {
     const { data, access_token, role } = res;
     lcStorage.set('user', data);
     lcStorage.set('access_token', access_token);
@@ -48,14 +48,14 @@ export const loginAction = {
   },
 
   login: (email, password, role, router) => {
-    return async function (dispatch) {
+    return async function(dispatch) {
       dispatch({ type: LOGIN_REQUEST });
       await loginApi.login(email, password, role).then(
-        (res) => {
+        res => {
           loginAction.handleLoginSuccess(res);
           dispatch(loginAction.loginSuccess(res));
         },
-        (error) => {
+        error => {
           console.log(error);
           dispatch(loginAction.loginError(error));
         },
@@ -64,14 +64,14 @@ export const loginAction = {
   },
 
   studentLogin: (id, password) => {
-    return async function (dispatch) {
+    return async function(dispatch) {
       dispatch({ type: LOGIN_REQUEST });
       await loginApi.studentLogin(id, password).then(
-        (res) => {
+        res => {
           loginAction.handleLoginSuccess(res);
           dispatch(loginAction.loginSuccess(res));
         },
-        (error) => {
+        error => {
           console.log(error);
           dispatch(loginAction.loginError(error));
         },

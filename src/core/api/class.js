@@ -1,22 +1,21 @@
-import { httpRequest } from './httpRequest'
+import { httpRequest } from './httpRequest';
 
 export const classApi = {
+  getClasses: (page = 1) => {
+    const params = { page };
+    return httpRequest.get('/classes', params);
+  },
 
-	getClasses: ( page = 1 ) => {
-        const params = {page}
-		return httpRequest.get('/classes', params);
-	},
+  getClass: classID => {
+    return httpRequest.get(`/classes/${classID}`);
+  },
 
-	getClass: (classID) => {
-		return httpRequest.get(`/classes/${classID}`);
-	},
+  submitGrades: (classID, grades) => {
+    return httpRequest.post(`/classes/${classID}/grades`, grades);
+  },
 
-	submitGrades: (classID, grades) => {
-		return httpRequest.post(`/classes/${classID}/grades`, grades)
-	},
-
-	approveGrades: (classID) => {
-		const params = {action: "approve_grades"};
-		return httpRequest.put(`/classes/${classID}`, params)
-	}
-}
+  approveGrades: classID => {
+    const params = { action: 'approve_grades' };
+    return httpRequest.put(`/classes/${classID}`, params);
+  },
+};

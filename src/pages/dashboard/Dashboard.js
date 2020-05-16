@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
-import {
-  Table,
-} from 'reactstrap';
+import { Table } from 'reactstrap';
 
 import s from './Dashboard.module.scss';
 
 import { classAction } from '../../actions/class';
-import { Role } from '../../constants'
+import { Role } from '../../constants';
 import { generalUtils } from '../../core/utils';
 
 class Dashboard extends Component {
@@ -22,14 +20,14 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.fetchClasses()
+    this.fetchClasses();
   }
 
   fetchClasses() {
     if (Role.getAdminRoles().includes(this.props.auth.role)) {
-      this.props.fetchAllClasses(this.state.page)
+      this.props.fetchAllClasses(this.state.page);
     } else {
-      this.props.fetchClassesByLecturer(this.state.page)
+      this.props.fetchClassesByLecturer(this.state.page);
     }
   }
 
@@ -37,7 +35,7 @@ class Dashboard extends Component {
     let selected = data.selected + 1;
 
     this.setState({ page: selected }, () => {
-      this.fetchClasses()
+      this.fetchClasses();
     });
   };
 
@@ -60,19 +58,19 @@ class Dashboard extends Component {
             </tr>
           </thead>
           <tbody>
-            {
-              this.props.classes.map(row =>
-                <tr key={row.id}>
-                  <td>{row.semester}</td>
-                  <td><Link to={"/home/classes/" + row.id}>{row.id}</Link></td>
-                  <td>{row.course.id}</td>
-                  <td>{row.course.name}</td>
-                  <td>{row.lecturer.name}</td>
-                  <td>{generalUtils.parseDate(row.grade_submitted_time)}</td>
-                  <td>{generalUtils.parseDate(row.grade_approved_time)}</td>
-                </tr>,
-              )
-            }
+            {this.props.classes.map(row => (
+              <tr key={row.id}>
+                <td>{row.semester}</td>
+                <td>
+                  <Link to={'/home/classes/' + row.id}>{row.id}</Link>
+                </td>
+                <td>{row.course.id}</td>
+                <td>{row.course.name}</td>
+                <td>{row.lecturer.name}</td>
+                <td>{generalUtils.parseDate(row.grade_submitted_time)}</td>
+                <td>{generalUtils.parseDate(row.grade_approved_time)}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
 
@@ -99,13 +97,13 @@ function mapStateToProps(state) {
     classes: state.classes.data,
     totalItems: state.classes.totalItems,
     itemsPerPage: state.classes.itemsPerPage,
-    auth: state.auth
+    auth: state.auth,
   };
 }
 
 const mapDispatchToProps = {
   fetchAllClasses: classAction.fetchAllClasses,
-  fetchClassesByLecturer: classAction.fetchClassesByLecturer
-}
+  fetchClassesByLecturer: classAction.fetchClassesByLecturer,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
