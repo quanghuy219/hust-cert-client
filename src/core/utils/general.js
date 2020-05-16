@@ -104,5 +104,13 @@ export const generalUtils = {
 		toast.error(errorMessage, {
 			position: 'bottom-left'
 		})
-	}
+	},
+
+	parseDate(dateString) {
+		if (!dateString)
+			return ''
+		const date = new Date(dateString);
+		this.dateSet = date.toDateString().split(' ');
+		return `${date.toLocaleString('en-us', { month: 'long' })} ${this.dateSet[2]}, ${this.dateSet[3]}`;
+	},
 }

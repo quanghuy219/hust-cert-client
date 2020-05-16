@@ -72,7 +72,7 @@ class Dashboard extends Component {
               this.props.classes.map(row =>
                 <tr key={row.id}>
                   <td>{row.semester}</td>
-                  <td>{row.id}</td>
+                  <td><Link to={"/home/classes/" + row.id}>{row.id}</Link></td>
                   <td>{row.course.id}</td>
                   <td>{row.course.name}</td>
                   <td>{row.lecturer.name}</td>

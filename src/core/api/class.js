@@ -7,6 +7,7 @@ export const classApi = {
 		return httpRequest.get('/classes', params);
 	},
 
-    
-
+	getClass: (classID) => {
+		return httpRequest.get(`/classes/${classID}`);
+	}
 }

@@ -1,0 +1,7 @@
+{
+    "name": "Enrollment",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./Enrollment.js"
+  }
+  

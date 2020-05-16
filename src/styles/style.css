@@ -21,3 +21,9 @@
 .pagination .disabled > a {
     cursor: not-allowed;
 }
+button:focus {
+    outline: none;
+}
+button:disabled {
+    cursor: not-allowed;
+}

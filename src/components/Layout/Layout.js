@@ -24,7 +24,7 @@ import Charts from '../../pages/charts'
 import Maps from '../../pages/google'
 import NotFound from '../../pages/notFound'
 import Icons from '../../pages/icons'
-import Typography from '../../pages/typography'
+import Enrollment from '../../pages/enrollment';
 import Tables from '../../pages/tables'
 import Notifications from '../../pages/notifications'
 import Posts from '../../pages/posts'
@@ -46,33 +46,32 @@ class Layout extends React.Component {
   renderRouter() {
     const adminRoute = (
       <Switch>
-        <Route path="/home/admin" exact component={Dashboard} />
-        <Route path="/home/admin/typography" exact component={Typography} />
-        <Route path="/home/admin/tables" exact component={Tables} />
-        <Route path="/home/admin/posts" component={Posts} />
-        <Route path="/home/admin/privacy" exact component={Privacy} />
-        <Route path="/home/admin/profile" exact component={Profile} />
-        <Route path="/home/admin/notifications" exact component={Notifications} /> 
-        <Route path="/home/admin/components/buttons" exact component={Buttons} />
-        <Route path="/home/admin/components/charts" exact component={Charts} />
-        <Route path="/home/admin/components/icons" exact component={Icons} />
-        <Route path="/home/admin/components/maps" exact component={Maps} />
+        <Route path="/home" exact component={Dashboard} />
+        <Route path="/home/classes/:classID" exact component={Enrollment} />
+        <Route path="/home/tables" exact component={Tables} />
+        <Route path="/home/posts" component={Posts} />
+        <Route path="/home/privacy" exact component={Privacy} />
+        <Route path="/home/profile" exact component={Profile} />
+        <Route path="/home/notifications" exact component={Notifications} /> 
+        <Route path="/home/components/buttons" exact component={Buttons} />
+        <Route path="/home/components/charts" exact component={Charts} />
+        <Route path="/home/components/icons" exact component={Icons} />
+        <Route path="/home/components/maps" exact component={Maps} />
         <Route component={NotFound}/>
       </Switch>
     );
     const lecturerRoute = (
       <Switch>
-        <Route path="/home/lecturer" exact component={Dashboard} />
-        <Route path="/home/lecturer/typography" exact component={Typography} />
-        <Route path="/home//lecturer/tables" exact component={Tables} />
+        <Route path="/home" exact component={Dashboard} />
+        <Route path="/home/classes/:classID" exact component={Enrollment} />
+        <Route path="/home/tables" exact component={Tables} />
         <Route component={NotFound}/>
       </Switch>
     )
     const studentRoute = (
       <Switch>
-        <Route path="/home/student" exact component={Dashboard} />
-        <Route path="/home/student/typography" exact component={Typography} />
-        <Route path="/home/student/tables" exact component={Tables} />
+        <Route path="/home" exact component={Dashboard} />
+        <Route path="/home/tables" exact component={Tables} />
         <Route component={NotFound}/>
       </Switch>
     )

@@ -49,7 +49,7 @@ class App extends React.PureComponent {
     return (
         <div>
             <ToastContainer
-                autoClose={3000}
+                autoClose={5000}
                 hideProgressBar
                 closeButton={<CloseButton/>}
                 transition={Slide}
@@ -57,8 +57,8 @@ class App extends React.PureComponent {
 
             <HashRouter>
                 <Switch>
-                    <Route path="/" exact render={() => <Redirect to={redirectedRoute} />}/>
-                    <Route path="/home" exact render={() => <Redirect to={redirectedRoute} />}/>
+                    <Route path="/" exact render={() => <Redirect to='/home' />}/>
+                    {/* <Route path="/home" exact render={() => <Redirect to={redirectedRoute} />}/>  */}
                     <PrivateRoute path="/home" dispatch={this.props.dispatch} component={LayoutComponent} isAuthenticated={this.props.isAuthenticated} role={this.props.role} />
                     <Route path="/documentation" exact
                            render={() => <Redirect to="/documentation/getting-started/overview"/>}/>
