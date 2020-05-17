@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { Table, Button, Input } from 'reactstrap';
 
 import { classAction } from '../../actions/class';
+import { certificateAction } from '../../actions/certificate';
 import { generalUtils } from '../../core/utils/general';
 import { Role } from '../../constants';
+import Certificate from '../certificate';
 import './style.css';
 
 class Enrollment extends React.Component {
@@ -16,12 +18,16 @@ class Enrollment extends React.Component {
       class: {
         enrollments: [],
       },
+      modalOpen: false,
+      certificate: null,
     };
     this.handleUpdateStudentGrade = this.handleUpdateStudentGrade.bind(this);
     this.submitGrades = this.submitGrades.bind(this);
     this.approveGrades = this.approveGrades.bind(this);
     this.createCertificateTemplate = this.createCertificateTemplate.bind(this);
     this.issueCertificates = this.issueCertificates.bind(this);
+    this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
+    this.openCertificateVerificationModal = this.openCertificateVerificationModal.bind(this);
   }
 
   componentDidMount() {
@@ -77,6 +83,27 @@ class Enrollment extends React.Component {
 
   issueCertificates() {
     this.props.issueCertificates(this.state.classID);
+  }
+
+  toggleCertificateVerificationModal() {
+    this.setState(prevState => {
+      let newState = {
+        openModal: !prevState.openModal,
+      };
+      if (prevState.openModal) {
+        newState.certificate = null;
+      }
+      return newState;
+    });
+  }
+
+  openCertificateVerificationModal(certID, type) {
+    certificateAction.getCertificateContent(certID, type).then(data => {
+      this.setState({
+        openModal: true,
+        certificate: JSON.parse(data),
+      });
+    });
   }
 
   render() {
@@ -223,17 +250,32 @@ class Enrollment extends React.Component {
                 <td>{row.grade}</td>
                 <td>
                   {row.certificate && row.certificate.template_url && (
-                    <Button color="info">Download</Button>
+                    <Button color="info">Display</Button>
                   )}
                 </td>
                 <td>
-                  {row.certificate && row.certificate.url && <Button color="info">Download</Button>}
+                  {row.certificate && row.certificate.url && (
+                    <Button
+                      color="info"
+                      onClick={() =>
+                        this.openCertificateVerificationModal(row.certificate.id, 'certificate')
+                      }
+                    >
+                      Verify
+                    </Button>
+                  )}
                 </td>
                 <td></td>
               </tr>
             ))}
           </tbody>
         </Table>
+
+        <Certificate
+          openModal={this.state.openModal}
+          toggle={this.toggleCertificateVerificationModal}
+          certificate={this.state.certificate}
+        />
       </div>
     );
   }

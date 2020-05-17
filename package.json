@@ -11,6 +11,7 @@
   "dependencies": {
     "@babel/core": "7.6.0",
     "@babel/plugin-transform-runtime": "^7.9.6",
+    "@blockcerts/blockcerts-verifier": "^1.33.0",
     "@svgr/webpack": "4.3.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
@@ -70,6 +71,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-app-polyfill": "^1.0.4",
+    "react-blockcerts": "^0.9.5",
     "react-dev-utils": "^9.1.0",
     "react-dom": "^16.11.0",
     "react-google-maps": "^9.4.5",
