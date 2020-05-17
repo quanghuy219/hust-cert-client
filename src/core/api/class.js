@@ -18,4 +18,12 @@ export const classApi = {
     const params = { action: 'approve_grades' };
     return httpRequest.put(`/classes/${classID}`, params);
   },
+
+  createCertificateTemplates: classID => {
+    return httpRequest.post(`/classes/${classID}/certificate-templates`);
+  },
+
+  issueCertificates: classID => {
+    return httpRequest.post(`/classes/${classID}/certificates`);
+  },
 };

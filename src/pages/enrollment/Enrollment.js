@@ -24,6 +24,8 @@ class Enrollment extends React.Component {
 		this.handleUpdateStudentGrade = this.handleUpdateStudentGrade.bind(this)
 		this.submitGrades = this.submitGrades.bind(this)
 		this.approveGrades = this.approveGrades.bind(this)
+		this.createCertificateTemplate = this.createCertificateTemplate.bind(this)
+		this.issueCertificates = this.issueCertificates.bind(this)
 	}
 
 	componentDidMount() {
@@ -72,6 +74,14 @@ class Enrollment extends React.Component {
 	approveGrades() {
 		this.props.approveGrades(this.state.classID)
 	}
+	
+	createCertificateTemplate() {
+		this.props.createCertificateTemplates(this.state.classID)
+	}
+
+	issueCertificates() {
+		this.props.issueCertificates(this.state.classID)
+	}
 
 	render() {
 		return (
@@ -92,6 +102,10 @@ class Enrollment extends React.Component {
 								<p> Grade Submitted Time: {generalUtils.parseDate(this.props.class.grade_submitted_time) } </p>
 								<p> Grade Approved Time: {generalUtils.parseDate(this.props.class.grade_approved_time)} </p>
 							</td>
+							<td>
+								<p> Certificate Templates Created Time: {generalUtils.parseDate(this.props.class.certificate_template_created_time) } </p>
+								<p> Certificate Created Time: {generalUtils.parseDate(this.props.class.certificate_created_time) } </p>
+							</td>
 						</tr>
 					</tbody>
 				</Table>
@@ -110,9 +124,17 @@ class Enrollment extends React.Component {
 
 					{
 						Role.getAdminRoles().includes(this.props.auth.role) && 
-						<Button color="info" disabled={this.props.class.grade_approved || !this.props.class.grade_submitted} onClick={this.approveGrades}>Approve Grades</Button>}
+						<Button color="info" disabled={this.props.class.grade_approved || !this.props.class.grade_submitted} onClick={this.approveGrades}>Approve Grades</Button>
+					}
+					{
+						Role.getAdminRoles().includes(this.props.auth.role) &&
+						<Button color="info" disabled={!this.props.class.grade_approved} onClick={this.createCertificateTemplate}>Create Certificate Template</Button>
+					}
+					{
+						this.props.auth.role === Role.SUPER_ADMIN &&
+						<Button color="info" disabled={!this.props.class.certificate_template_created} onClick={this.issueCertificates}>Create Certificate Template</Button>
+					}
 				</div>
-
 				<Table className="class-enrollments">
 					<thead>
 						<tr>
@@ -121,6 +143,8 @@ class Enrollment extends React.Component {
 							<th>Midterm</th>
 							<th>Final</th>
 							<th className="hidden-sm-down">Grade</th>
+							<th>Certificate Template</th>
+							<th>Digital Certificate</th>
 							<th />
 						</tr>
 					</thead>
@@ -149,6 +173,13 @@ class Enrollment extends React.Component {
 										}
 									</td>
 									<td>{row.grade}</td>
+									<td>
+										{row.certificate && row.certificate.template_url && <Button color="info">Download</Button>}
+									</td>
+									<td>
+										{row.certificate && row.certificate.url && <Button color="info">Download</Button>}
+									</td>
+									<td></td>
 								</tr>,
 							)
 						}
@@ -169,7 +200,9 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
 	fetchClass: classAction.fetchClass,
 	submitGrades: classAction.submitGrades,
-	approveGrades: classAction.approveGrades
+	approveGrades: classAction.approveGrades,
+	createCertificateTemplates: classAction.createCertificateTemplates,
+	issueCertificates: classAction.issueCertificates,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Enrollment);

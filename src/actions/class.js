@@ -95,4 +95,32 @@ export const classAction = {
       );
     };
   },
+
+  createCertificateTemplates: classID => {
+    return async function(dispatch) {
+      classApi.createCertificateTemplates(classID).then(
+        res => {
+          dispatch(classAction.fetchClassSuccess(res));
+          generalUtils.showSuccessNotification('Create certificate templates successfully');
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message || "Something went wrong");
+        },
+      );
+    };
+  },
+
+  issueCertificates: classID => {
+    return async function(dispatch) {
+      classApi.issueCertificates(classID).then(
+        res => {
+          dispatch(classAction.fetchClassSuccess(res));
+          generalUtils.showSuccessNotification('Create certificates successfully');
+        },
+        error => {
+          generalUtils.showErrorNotification(error.message || "Something went wrong");
+        },
+      );
+    };
+  }
 };
