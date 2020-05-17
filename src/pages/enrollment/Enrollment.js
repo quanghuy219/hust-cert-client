@@ -19,7 +19,8 @@ class Enrollment extends React.Component {
         enrollments: [],
       },
       modalOpen: false,
-      certificate: null,
+			certificate: null,
+			certificateType: ""
     };
     this.handleUpdateStudentGrade = this.handleUpdateStudentGrade.bind(this);
     this.submitGrades = this.submitGrades.bind(this);
@@ -91,7 +92,8 @@ class Enrollment extends React.Component {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-        newState.certificate = null;
+				newState.certificate = null;
+				newState.certificateType = ""
       }
       return newState;
     });
@@ -99,9 +101,11 @@ class Enrollment extends React.Component {
 
   openCertificateVerificationModal(certID, type) {
     certificateAction.getCertificateContent(certID, type).then(data => {
+			console.log(JSON.parse(data))
       this.setState({
         openModal: true,
-        certificate: JSON.parse(data),
+				certificate: JSON.parse(data),
+				certificateType: type
       });
     });
   }
@@ -250,7 +254,13 @@ class Enrollment extends React.Component {
                 <td>{row.grade}</td>
                 <td>
                   {row.certificate && row.certificate.template_url && (
-                    <Button color="info">Display</Button>
+										<Button color="info"
+											onClick={() =>
+												this.openCertificateVerificationModal(row.certificate.id, 'template')
+											}
+										>
+											Display
+										</Button>
                   )}
                 </td>
                 <td>
@@ -274,7 +284,8 @@ class Enrollment extends React.Component {
         <Certificate
           openModal={this.state.openModal}
           toggle={this.toggleCertificateVerificationModal}
-          certificate={this.state.certificate}
+					certificate={this.state.certificate}
+					type={this.state.certificateType}
         />
       </div>
     );

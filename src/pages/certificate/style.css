@@ -1,0 +1,6 @@
+@media (min-width: 992px) {
+    .certificate-modal {
+        max-width: 1150px;
+        width: 70vw;
+    }
+}
