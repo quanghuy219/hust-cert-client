@@ -24,12 +24,13 @@ import Charts from '../../pages/charts'
 import Maps from '../../pages/google'
 import NotFound from '../../pages/notFound'
 import Icons from '../../pages/icons'
-import Enrollment from '../../pages/enrollment';
+import Enrollment from '../../pages/enrollment'
 import Tables from '../../pages/tables'
 import Notifications from '../../pages/notifications'
 import Posts from '../../pages/posts'
 import Profile from '../../pages/profile'
 import Privacy from '../../pages/privacy'
+import Transript from '../../pages/transcript'
 
 import { Role } from '../../constants';
 import { loginAction } from '../../actions/user';
@@ -70,8 +71,8 @@ class Layout extends React.Component {
     );
     const studentRoute = (
       <Switch>
-        <Route path="/home" exact component={Dashboard} />
-        <Route path="/home/tables" exact component={Tables} />
+        <Route path="/home" exact component={Transript} />
+        <Route path="/home/transcript" exact component={Transript} />
         <Route component={NotFound}/>
       </Switch>
     );

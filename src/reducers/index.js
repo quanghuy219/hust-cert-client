@@ -4,6 +4,8 @@ import runtime from './runtime';
 import navigation from './navigation';
 import posts from './posts';
 import classes from './class';
+import student from './student';
+
 
 export default combineReducers({
   auth,
@@ -11,4 +13,5 @@ export default combineReducers({
   navigation,
   posts,
   classes,
+  student,
 });
