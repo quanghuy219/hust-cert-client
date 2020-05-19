@@ -20,6 +20,7 @@ class Sidebar extends React.Component {
           headerLink="/home/admin/notifications"
           glyph="notifications"
         />
+        <LinksGroup header="Register" headerLink="/home/register" glyph="typography" />
         <LinksGroup
           header="Components"
           headerLink="/home/admin/components"

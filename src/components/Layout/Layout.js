@@ -18,18 +18,19 @@ import Footer from '../Footer';
 import Sidebar from '../Sidebar';
 
 // Dashboard component is loaded directly as an example of server side rendering
-import Dashboard from '../../pages/dashboard'
-import Buttons from '../../pages/buttons'
-import Charts from '../../pages/charts'
-import Maps from '../../pages/google'
-import NotFound from '../../pages/notFound'
-import Icons from '../../pages/icons'
+import Dashboard from '../../pages/dashboard';
+import Buttons from '../../pages/buttons';
+import Charts from '../../pages/charts';
+import Maps from '../../pages/google';
+import NotFound from '../../pages/notFound';
+import Icons from '../../pages/icons';
+import Tables from '../../pages/tables';
+import Notifications from '../../pages/notifications';
+import Posts from '../../pages/posts';
+import Profile from '../../pages/profile';
+import Privacy from '../../pages/privacy';
+import Register from '../../pages/register';
 import Enrollment from '../../pages/enrollment';
-import Tables from '../../pages/tables'
-import Notifications from '../../pages/notifications'
-import Posts from '../../pages/posts'
-import Profile from '../../pages/profile'
-import Privacy from '../../pages/privacy'
 
 import { Role } from '../../constants';
 import { loginAction } from '../../actions/user';
@@ -52,12 +53,13 @@ class Layout extends React.Component {
         <Route path="/home/posts" component={Posts} />
         <Route path="/home/privacy" exact component={Privacy} />
         <Route path="/home/profile" exact component={Profile} />
-        <Route path="/home/notifications" exact component={Notifications} /> 
+        <Route path="/home/notifications" exact component={Notifications} />
         <Route path="/home/components/buttons" exact component={Buttons} />
         <Route path="/home/components/charts" exact component={Charts} />
         <Route path="/home/components/icons" exact component={Icons} />
         <Route path="/home/components/maps" exact component={Maps} />
-        <Route component={NotFound}/>
+        <Route path="/home/register" exact component={Register} />
+        <Route component={NotFound} />
       </Switch>
     );
     const lecturerRoute = (
@@ -65,14 +67,14 @@ class Layout extends React.Component {
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/classes/:classID" exact component={Enrollment} />
         <Route path="/home/tables" exact component={Tables} />
-        <Route component={NotFound}/>
+        <Route component={NotFound} />
       </Switch>
     );
     const studentRoute = (
       <Switch>
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/tables" exact component={Tables} />
-        <Route component={NotFound}/>
+        <Route component={NotFound} />
       </Switch>
     );
 

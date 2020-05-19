@@ -9,9 +9,8 @@ import ErrorPage from '../pages/error';
 import '../styles/theme.scss';
 import '../styles/style.css';
 import LayoutComponent from '../components/Layout';
-//import DocumentationLayoutComponent from '../documentation/DocumentationLayout';
-import Login from '../pages/login';
 import Register from '../pages/register';
+import Login from '../pages/login';
 import { logoutUser } from '../actions/user';
 import { Role } from '../constants';
 
@@ -34,29 +33,37 @@ const CloseButton = ({ closeToast }) => (
 class App extends React.PureComponent {
   render() {
     return (
-        <div>
-            <ToastContainer
-                autoClose={5000}
-                hideProgressBar
-                closeButton={<CloseButton/>}
-                transition={Slide}
+      <div>
+        <ToastContainer
+          autoClose={5000}
+          hideProgressBar
+          closeButton={<CloseButton />}
+          transition={Slide}
+        />
+
+        <HashRouter>
+          <Switch>
+            <Route path="/" exact render={() => <Redirect to="/home" />} />
+            {/* <Route path="/home" exact render={() => <Redirect to={redirectedRoute} />}/>  */}
+            <PrivateRoute
+              path="/home"
+              dispatch={this.props.dispatch}
+              component={LayoutComponent}
+              isAuthenticated={this.props.isAuthenticated}
+              role={this.props.role}
             />
-
-            <HashRouter>
-                <Switch>
-                    <Route path="/" exact render={() => <Redirect to='/home' />}/>
-                    {/* <Route path="/home" exact render={() => <Redirect to={redirectedRoute} />}/>  */}
-                    <PrivateRoute path="/home" dispatch={this.props.dispatch} component={LayoutComponent} isAuthenticated={this.props.isAuthenticated} role={this.props.role} />
-                    <Route path="/documentation" exact
-                           render={() => <Redirect to="/documentation/getting-started/overview"/>}/>
-                    {/* <Route path="/documentation" component={DocumentationLayoutComponent}/> */}
-                    <Route path="/register" exact component={Register}/>
-                    <Route path="/login" exact component={Login}/>
-                    <Route path="/error" exact component={ErrorPage}/>
-                </Switch>
-            </HashRouter>
-        </div>
-
+            <Route
+              path="/documentation"
+              exact
+              render={() => <Redirect to="/documentation/getting-started/overview" />}
+            />
+            {/* <Route path="/documentation" component={DocumentationLayoutComponent}/> */}
+            <Route path="/register" exact component={Register} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/error" exact component={ErrorPage} />
+          </Switch>
+        </HashRouter>
+      </div>
     );
   }
 }
