@@ -1,11 +1,11 @@
 import React from 'react';
-import { Breadcrumb, BreadcrumbItem, Row, Col } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { useState } from 'react';
 import { accountAction } from '../../actions/account';
-import { BASE_DOMAIN } from '../../core/configs/base';
+import config from '../../core/configs';
 import styled from 'styled-components';
 
-const BASE_EMAIL = `@${BASE_DOMAIN}`;
+const BASE_EMAIL = `@${config.BASE_DOMAIN}`;
 
 const Types = {
   STUDENT: 'student',
@@ -13,7 +13,7 @@ const Types = {
 };
 
 const isValidEmail = (email) => {
-  const regex = new RegExp(`^[a-zA-Z0-9.-]*@${BASE_DOMAIN}$`);
+  const regex = new RegExp(`^[a-zA-Z0-9.-]*@${config.BASE_DOMAIN}$`);
   return regex.test(email);
 };
 
@@ -105,7 +105,11 @@ const Register = () => {
   };
 
   const handleOnClick = () => {
-    accountAction.registerStudentAccount(info);
+    if (type === Types.STUDENT) {
+      accountAction.registerStudentAccount(info);
+    } else {
+      accountAction.registerLecturerAccount(info)
+    }
     setInfo(defaultInfo);
   };
 

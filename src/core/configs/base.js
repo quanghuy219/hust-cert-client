@@ -1,5 +1,4 @@
 export class BaseConfig {
   BASE_URL = `http://localhost:8000`;
+  BASE_DOMAIN = `hust.edu.vn`;
 }
-
-export const BASE_DOMAIN = `hust.edu.vn`;

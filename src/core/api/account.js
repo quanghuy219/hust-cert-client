@@ -8,6 +8,6 @@ export const accountApi = {
 
   registerLecturer: ({ name, email, school, department }) => {
     const params = { name, email, school, department };
-    return httpRequest.get(`/admin/lecturers`, params);
+    return httpRequest.post(`/admin/lecturers`, params);
   },
 };
