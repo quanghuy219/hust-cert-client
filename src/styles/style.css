@@ -27,3 +27,11 @@ button:focus {
 button:disabled {
     cursor: not-allowed;
 }
+.class-buttons {
+    margin: 10px;
+}
+.class-buttons button {
+    outline: none;
+    box-shadow: none;
+    margin-right: 10px;
+}
