@@ -31,9 +31,10 @@ import Posts from '../../pages/posts'
 import Profile from '../../pages/profile'
 import Privacy from '../../pages/privacy'
 import Transript from '../../pages/transcript'
+import Verification from '../../pages/verification'
 
 import { Role } from '../../constants';
-import { loginAction } from '../../actions/user';
+import { logoutUser } from '../../actions/user';
 
 class Layout extends React.Component {
   constructor(props) {
@@ -77,12 +78,20 @@ class Layout extends React.Component {
       </Switch>
     );
 
+    const verifierRoute = (
+      <Switch>
+        <Route path="/verification/:shareCode" exact component={Verification} />
+        <Route component={NotFound}/>
+      </Switch>
+    )
     if (Role.getAdminRoles().includes(this.props.role)) {
       return adminRoute;
     } else if (this.props.role === Role.LECTURER) {
       return lecturerRoute;
-    } else {
+    } else if (this.props.role === Role.STUDENT) {
       return studentRoute;
+    } else if (this.props.verifier) {
+      return verifierRoute;
     }
   }
 
@@ -97,6 +106,7 @@ class Layout extends React.Component {
                 sidebarOpen: !this.state.sidebarOpen,
               })
             }
+            showDropdown={Role.requiredLoginRoles().includes(this.props.role) ? true : false}
           />
           <main className={s.content}>{this.renderRouter()}</main>
           <Footer />
@@ -113,7 +123,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  logout: loginAction.logoutUser,
+  logout: logoutUser,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

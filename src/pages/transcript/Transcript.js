@@ -11,7 +11,7 @@ class Transcript extends React.Component {
     super(props);
     this.state = {
       modalOpen: false,
-      certificate: null,
+      certificate: {},
       certificateType: '',
       selectVerificationRequest: false,
       verificationRequest: {
@@ -40,7 +40,7 @@ class Transcript extends React.Component {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-        newState.certificate = null;
+        newState.certificate = {};
         newState.certificateType = '';
       }
       return newState;
@@ -194,14 +194,14 @@ class Transcript extends React.Component {
                     <span>
                       <Button
                         color="danger"
-                        style={{ 'margin-right': '20px' }}
+                        style={{ marginRight: '20px' }}
                         onClick={() => this.downloadCertificate(row.certificate.id)}
                       >
                         Download
                       </Button>
 
                       <Button
-                        style={{ 'margin-right': '20px' }}
+                        style={{ marginRight: '20px' }}
                         color="info"
                         onClick={() =>
                           this.openCertificateVerificationModal(row.certificate.id, 'certificate')

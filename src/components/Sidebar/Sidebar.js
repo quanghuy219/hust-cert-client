@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
 
 import Icon from '../Icon';
 import LinksGroup from './LinksGroup/LinksGroup';
@@ -65,12 +65,20 @@ class Sidebar extends React.Component {
       </div>
     );
 
+    const verifierItems = (
+      <div>
+        <LinksGroup header="Dashboard" headerLink="#" glyph="dashboard" />
+      </div>
+    );
+
     if (Role.getAdminRoles().includes(this.props.role)) {
       return adminItems;
     } else if (this.props.role === Role.LECTURER) {
       return lecturerItems;
-    } else {
+    } else if (this.props.role === Role.STUDENT){
       return studentItems;
+    } else if (this.props.role === Role.VERIFIER) {
+      return verifierItems;
     }
   }
 
