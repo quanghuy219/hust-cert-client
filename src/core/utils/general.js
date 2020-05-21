@@ -142,4 +142,15 @@ export const generalUtils = {
 		this.dateSet = date.toDateString().split(' ');
 		return `${date.toLocaleString('en-us', { month: 'long' })} ${this.dateSet[2]}, ${this.dateSet[3]}`;
 	},
+
+	parseDateTime(dtString) {
+		if (!dtString)
+			return ''
+		const date = new Date(dtString);
+		// this.dateSet = date.toDateString().split(' ');
+		let userTimezoneOffset = date.getTimezoneOffset() * 60000;
+		let localTime = new Date(date.getTime() - userTimezoneOffset);
+		console.log(localTime.toLocaleTimeString())
+		return localTime.toLocaleString()
+	}
 }

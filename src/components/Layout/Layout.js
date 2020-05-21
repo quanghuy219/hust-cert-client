@@ -9,7 +9,7 @@
 
 import React from 'react';
 import cx from 'classnames';
-import { Switch, Route, withRouter } from 'react-router';
+import { Switch, Route, withRouter, Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import s from './Layout.module.scss';
@@ -50,31 +50,21 @@ class Layout extends React.Component {
       <Switch>
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/classes/:classID" exact component={Enrollment} />
-        <Route path="/home/tables" exact component={Tables} />
-        <Route path="/home/posts" component={Posts} />
-        <Route path="/home/privacy" exact component={Privacy} />
-        <Route path="/home/profile" exact component={Profile} />
-        <Route path="/home/notifications" exact component={Notifications} /> 
-        <Route path="/home/components/buttons" exact component={Buttons} />
-        <Route path="/home/components/charts" exact component={Charts} />
-        <Route path="/home/components/icons" exact component={Icons} />
-        <Route path="/home/components/maps" exact component={Maps} />
-        <Route component={NotFound}/>
+        <Redirect to="/" />
       </Switch>
     );
     const lecturerRoute = (
       <Switch>
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/classes/:classID" exact component={Enrollment} />
-        <Route path="/home/tables" exact component={Tables} />
-        <Route component={NotFound}/>
+        <Redirect to="/" />
       </Switch>
     );
     const studentRoute = (
       <Switch>
         <Route path="/home" exact component={Transript} />
         <Route path="/home/transcript" exact component={Transript} />
-        <Route component={NotFound}/>
+        <Redirect to="/" />
       </Switch>
     );
 

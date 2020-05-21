@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router';
-import { HashRouter } from 'react-router-dom';
+import { HashRouter, BrowserRouter } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify';
 
 import '../styles/theme.scss';
@@ -39,8 +39,7 @@ class App extends React.PureComponent {
                 closeButton={<CloseButton/>}
                 transition={Slide}
             />
-
-            <HashRouter>
+              <BrowserRouter>
                 <Switch>
                     <Route path="/" exact render={() => <Redirect to='/home' />}/>
                     {/* <Route path="/home" exact render={() => <Redirect to={redirectedRoute} />}/>  */}
@@ -51,7 +50,7 @@ class App extends React.PureComponent {
                     <Route path="/error" exact component={ErrorPage}/>
                     <Route path="/verification/:shareCode" exact render={(props) => <LayoutComponent {...props} verifier={true} />} />
                 </Switch>
-            </HashRouter>
+              </BrowserRouter>
         </div>
 
     );

@@ -205,7 +205,7 @@ class Enrollment extends React.Component {
               disabled={!this.props.class.certificate_template_created}
               onClick={this.issueCertificates}
             >
-              Create Certificate Template
+              Issue Digital Certificate
             </Button>
           )}
         </div>

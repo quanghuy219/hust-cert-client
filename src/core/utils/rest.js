@@ -8,12 +8,12 @@ export const restUtils = {
       return Promise.resolve(response.json());
     } else {
       return Promise.resolve(response.json()).then((error) => {
-        const { error_data, message } = error;
+        const { data, message } = error;
         // eslint-disable-next-line no-throw-literal
         throw {
           status: false,
           message,
-          error_data,
+          data,
         };
       });
     }

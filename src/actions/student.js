@@ -26,7 +26,7 @@ export const studentAction = {
   createVerificationRequest: (verifier, enrollments = [], degrees = [], duration) => {
     return studentApi.createVerfificationRequest(verifier, enrollments, degrees, duration).then(
       res => {
-        generalUtils.showSuccessNotification("Verifier can access your records from this moment")
+        return Promise.resolve(res)
       },
       error => {
         generalUtils.showErrorNotification(error.message);

@@ -5,6 +5,8 @@ import { Table, Button, Input, Form } from 'reactstrap';
 import { studentAction } from '../../actions/student';
 import { certificateAction } from '../../actions/certificate';
 import Certificate from '../certificate';
+import VerificationInfoModal from './VerificationInfoModal';
+
 
 class Transcript extends React.Component {
   constructor(props) {
@@ -20,6 +22,8 @@ class Transcript extends React.Component {
         verifier: '',
         duration: '',
       },
+      verificationModalOpen: false,
+      verificationInfo: {}
     };
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
     this.openCertificateVerificationModal = this.openCertificateVerificationModal.bind(this);
@@ -28,6 +32,7 @@ class Transcript extends React.Component {
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.handleVerifierEmail = this.handleVerifierEmail.bind(this);
     this.handleDurationTime = this.handleDurationTime.bind(this);
+    this.toggleVerificationInfoModal = this.toggleVerificationInfoModal.bind(this);
   }
 
   componentDidMount() {
@@ -57,13 +62,20 @@ class Transcript extends React.Component {
     });
   }
 
-  submitVerificationRequest() {
+  submitVerificationRequest(e) {
+    e.preventDefault();
     let { verifier, enrollments, degrees, duration } = this.state.verificationRequest;
     enrollments = [...enrollments];
     degrees = [...degrees];
-    studentAction.createVerificationRequest(verifier, enrollments, degrees, duration).then(() => {
+    studentAction.createVerificationRequest(verifier, enrollments, degrees, duration).then((res) => {
       this.setState({
         selectVerificationRequest: false,
+        verificationModalOpen: true,
+        verificationInfo: {
+          expirationTime: res.expiration_time,
+          shareCode: res.share_code,
+          verifier: res.verifier
+        }
       });
     });
   }
@@ -108,6 +120,12 @@ class Transcript extends React.Component {
     });
   }
 
+  toggleVerificationInfoModal() {
+    this.setState({
+      verificationModalOpen: !this.state.verificationModalOpen
+    })
+  }
+
   render() {
     return (
       <div>
@@ -140,7 +158,7 @@ class Transcript extends React.Component {
                   type="email"
                   style={{ margin: '10px 0' }}
                   placeholder="Enter verifier email"
-                  required="true"
+                  required={true}
                   onChange={this.handleVerifierEmail}
                 />
 
@@ -149,7 +167,7 @@ class Transcript extends React.Component {
                   min="1"
                   step="1"
                   placeholder="Enter expiration time (in hours)"
-                  required="true"
+                  required={true}
                   onChange={this.handleDurationTime}
                 />
               </Form>
@@ -222,6 +240,12 @@ class Transcript extends React.Component {
           toggle={this.toggleCertificateVerificationModal}
           certificate={this.state.certificate}
           type={this.state.certificateType}
+        />
+
+        <VerificationInfoModal 
+          openModal={this.state.verificationModalOpen}
+          toggleModal={this.toggleVerificationInfoModal}
+          verification={this.state.verificationInfo}
         />
       </div>
     );
