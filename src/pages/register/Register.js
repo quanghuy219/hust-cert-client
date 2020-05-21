@@ -4,17 +4,30 @@ import { useState } from 'react';
 import { accountAction } from '../../actions/account';
 import config from '../../core/configs';
 import styled from 'styled-components';
+import { Role } from '../../constants/';
+import { useSelector } from 'react-redux';
+import { Modal, ModalHeader, ModalBody, Button, ModalFooter } from 'reactstrap';
+import './style.css';
 
 const BASE_EMAIL = `@${config.BASE_DOMAIN}`;
-
-const Types = {
-  STUDENT: 'student',
-  LECTURER: 'lecturer',
-};
+const regex = new RegExp(`^[a-zA-Z0-9.-_]*@${config.BASE_DOMAIN}$`);
 
 const isValidEmail = (email) => {
-  const regex = new RegExp(`^[a-zA-Z0-9.-]*@${config.BASE_DOMAIN}$`);
   return regex.test(email);
+};
+
+const renderModalContent = (data) => {
+  let content = '';
+  for (let key in data) {
+    let value = data[key];
+    content += `
+      <div>
+        <span>${key}</span><span>${value}</span>
+      </div>
+    `;
+  }
+
+  return content;
 };
 
 const defaultInfo = {
@@ -23,62 +36,82 @@ const defaultInfo = {
   email: BASE_EMAIL,
   school: '',
   department: '',
+  super_admin: false,
 };
 
 const Register = () => {
-  const [type, setType] = useState(Types.STUDENT);
+  const [type, setType] = useState(Role.STUDENT);
 
-  const [info, setInfo] = useState(defaultInfo);
+  const [info, setInfo] = useState({ ...defaultInfo });
+
+  const [modal, setModal] = useState(false);
+  const toggleModal = () => setModal(!modal);
+
+  const [modalContent, setModalContent] = useState('');
+
+  const role = useSelector((state) => state.auth.role);
 
   const updateStudentInfo = ({ name, major }) => {
-    let newInfo = {};
+    let newInfo = { ...info };
 
     if (typeof name !== 'undefined') {
-      newInfo = {
-        ...info,
-        name,
-      };
+      newInfo.name = name;
     }
 
     if (typeof major !== 'undefined') {
-      newInfo = {
-        ...info,
-        major,
-      };
+      newInfo.major = major;
     }
 
     setInfo(newInfo);
   };
 
   const updateLecturerInfo = ({ name, email, school, department }) => {
-    let newInfo = {};
+    let newInfo = { ...info };
 
     if (typeof name !== 'undefined') {
-      newInfo = {
-        ...info,
-        name,
-      };
+      newInfo.name = name;
     }
 
     if (typeof email !== 'undefined') {
-      newInfo = {
-        ...info,
-        email,
-      };
+      newInfo.email = email;
     }
 
     if (typeof school !== 'undefined') {
-      newInfo = {
-        ...info,
-        school,
-      };
+      newInfo.school = school;
     }
 
     if (typeof department !== 'undefined') {
-      newInfo = {
-        ...info,
-        department,
-      };
+      newInfo.department = department;
+    }
+
+    setInfo(newInfo);
+  };
+
+  const updateAdminInfo = ({ name, email }) => {
+    let newInfo = { ...info };
+    newInfo.super_admin = false;
+
+    if (typeof name !== 'undefined') {
+      newInfo.name = name;
+    }
+
+    if (typeof email !== 'undefined') {
+      newInfo.email = email;
+    }
+
+    setInfo(newInfo);
+  };
+
+  const updateSuperAdminInfo = ({ name, email }) => {
+    let newInfo = { ...info };
+    newInfo.super_admin = true;
+
+    if (typeof name !== 'undefined') {
+      newInfo.name = name;
+    }
+
+    if (typeof email !== 'undefined') {
+      newInfo.email = email;
     }
 
     setInfo(newInfo);
@@ -97,31 +130,205 @@ const Register = () => {
       }
     }
 
-    if (type === Types.STUDENT) {
+    if (type === Role.STUDENT) {
       updateStudentInfo(newInfo);
-    } else {
+    } else if (type === Role.LECTURER) {
       updateLecturerInfo(newInfo);
+    } else if (type === Role.ADMIN) {
+      updateAdminInfo(newInfo);
+    } else if (type === Role.SUPER_ADMIN) {
+      updateSuperAdminInfo(newInfo);
     }
   };
 
-  const handleOnClick = () => {
-    if (type === Types.STUDENT) {
-      accountAction.registerStudentAccount(info);
-    } else {
-      accountAction.registerLecturerAccount(info)
+  const handleOnClick = (event) => {
+    let nextAction = null;
+
+    if (type === Role.STUDENT) {
+      nextAction = accountAction.registerStudentAccount(info);
+    } else if (type === Role.LECTURER) {
+      nextAction = accountAction.registerLecturerAccount(info);
+    } else if (type === Role.ADMIN || type === Role.SUPER_ADMIN) {
+      nextAction = accountAction.registerAdminAccount(info);
     }
-    setInfo(defaultInfo);
+
+    nextAction.then((data) => {
+      setModalContent(renderModalContent(data));
+      toggleModal();
+    });
+
+    setInfo({ ...defaultInfo });
+
+    event.preventDefault();
+    return false;
   };
 
   const switchToStudent = () => {
-    setType(Types.STUDENT);
-    setInfo(defaultInfo);
+    setType(Role.STUDENT);
+    setInfo({ ...defaultInfo });
   };
 
   const switchToLecturer = () => {
-    setType(Types.LECTURER);
-    setInfo(defaultInfo);
+    setType(Role.LECTURER);
+    setInfo({ ...defaultInfo });
   };
+
+  const switchToAdmin = () => {
+    setType(Role.ADMIN);
+    setInfo({ ...defaultInfo, super_admin: false });
+  };
+
+  const switchToSuperAdmin = () => {
+    setType(Role.SUPER_ADMIN);
+    setInfo({ ...defaultInfo, super_admin: true });
+  };
+
+  const SwitchButtons = (
+    <>
+      <button
+        className={`student-btn btn ${type === Role.STUDENT ? 'btn-info' : 'btn-outline-info'}`}
+        onClick={switchToStudent}
+      >
+        Student
+      </button>
+      <button
+        className={`lecturer-btn btn ${type === Role.LECTURER ? 'btn-info' : 'btn-outline-info'}`}
+        onClick={switchToLecturer}
+      >
+        Lecturer
+      </button>
+      {(role === Role.ADMIN || role === Role.SUPER_ADMIN) && (
+        <button
+          className={`admin-btn btn ${type === Role.ADMIN ? 'btn-info' : 'btn-outline-info'}`}
+          onClick={switchToAdmin}
+        >
+          Admin
+        </button>
+      )}
+      {role === Role.SUPER_ADMIN && (
+        <button
+          className={`super-admin-btn btn ${
+            type === Role.SUPER_ADMIN ? 'btn-info' : 'btn-outline-info'
+          }`}
+          onClick={switchToSuperAdmin}
+        >
+          Super Admin
+        </button>
+      )}
+    </>
+  );
+
+  const StudentForm = (
+    <div>
+      <div className="form-group">
+        <label>Name</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Name"
+          name="name"
+          onChange={handleTextChange}
+          value={info.name || ''}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Major</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Major"
+          name="major"
+          onChange={handleTextChange}
+          value={info.major || ''}
+          required
+        />
+      </div>
+    </div>
+  );
+
+  const LecturerForm = (
+    <div>
+      <div className="form-group">
+        <label>Name</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Name"
+          name="name"
+          onChange={handleTextChange}
+          value={info.name || ''}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          className="form-control"
+          placeholder="Email"
+          name="email"
+          onChange={handleTextChange}
+          value={info.email || ''}
+          pattern={`^[a-zA-Z0-9.-_]+@${config.BASE_DOMAIN}$`}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>School</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="School"
+          name="school"
+          onChange={handleTextChange}
+          value={info.school || ''}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Department</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Department"
+          name="department"
+          onChange={handleTextChange}
+          value={info.department || ''}
+          required
+        />
+      </div>
+    </div>
+  );
+
+  const AdminForm = (
+    <div>
+      <div className="form-group">
+        <label>Name</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Name"
+          name="name"
+          onChange={handleTextChange}
+          value={info.name || ''}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          className="form-control"
+          placeholder="Email"
+          name="email"
+          onChange={handleTextChange}
+          value={info.email || ''}
+          required
+        />
+      </div>
+    </div>
+  );
 
   return (
     <View>
@@ -130,131 +337,58 @@ const Register = () => {
         <BreadcrumbItem active>Register</BreadcrumbItem>
       </Breadcrumb>
       <h1 className="page-title mb-lg">Register</h1>
-      <div className="switch-buttons">
-        <button
-          className={`student-btn btn ${type === Types.STUDENT ? 'btn-info' : 'btn-outline-info'}`}
-          onClick={switchToStudent}
-        >
-          Student
-        </button>
-        <button
-          className={`lecturer-btn btn ${
-            type === Types.LECTURER ? 'btn-info' : 'btn-outline-info'
-          }`}
-          onClick={switchToLecturer}
-        >
-          Lecturer
-        </button>
-      </div>
-      <div className="">
-        {type === Types.STUDENT && (
-          <div>
-            <div className="form-group">
-              <label>Name</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Name"
-                name="name"
-                onChange={handleTextChange}
-                value={info.name || ''}
-              />
-            </div>
-            <div className="form-group">
-              <label>Major</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Major"
-                name="major"
-                onChange={handleTextChange}
-                value={info.major || ''}
-              />
-            </div>
-          </div>
-        )}
+      <div className="switch-buttons">{SwitchButtons}</div>
+      <form onSubmit={handleOnClick}>
+        {type === Role.STUDENT && StudentForm}
 
-        {type === Types.LECTURER && (
-          <div>
-            <div className="form-group">
-              <label>Name</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Name"
-                name="name"
-                onChange={handleTextChange}
-                value={info.name || ''}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                id="lecturer-email-input"
-                type="text"
-                className="form-control"
-                placeholder="Email"
-                name="email"
-                onChange={handleTextChange}
-                value={info.email || ''}
-              />
-            </div>
-            <div className="form-group">
-              <label>School</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="School"
-                name="school"
-                onChange={handleTextChange}
-                value={info.school || ''}
-              />
-            </div>
-            <div className="form-group">
-              <label>Department</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Department"
-                name="department"
-                onChange={handleTextChange}
-                value={info.department || ''}
-              />
-            </div>
-          </div>
-        )}
+        {type === Role.LECTURER && LecturerForm}
 
-        <button onClick={handleOnClick} className="btn btn-primary">
-          Submit
-        </button>
+        {type === Role.ADMIN && AdminForm}
+
+        {type === Role.SUPER_ADMIN && AdminForm}
+
+        <input value={'Submit'} type={'submit'} className="btn btn-primary" />
+      </form>
+
+      <div>
+        <Modal
+          className={'register-success-modal'}
+          isOpen={modal}
+          toggle={toggleModal}
+          backdrop={true}
+          keyboard={true}
+        >
+          <ModalHeader toggle={toggleModal}>Register successfully</ModalHeader>
+          <ModalBody>
+            <div dangerouslySetInnerHTML={{ __html: modalContent }}></div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={toggleModal}>
+              OK
+            </Button>
+          </ModalFooter>
+        </Modal>
       </div>
     </View>
   );
 };
 
+// FIXME: Responsive layout
 const View = styled.div`
   > {
     .switch-buttons {
       margin-bottom: 2em;
 
-      .student-btn {
-        margin-right: 1em;
+      > button ~ button {
+        margin-left: 1em;
       }
     }
   }
 
-  #lecturer-email-input {
-    position: relative;
-
-    &:before {
-      content: 'hehehe';
-      width: 100px;
-      height: 100px;
-      position: absolute;
-      background: black;
-      top: 2em;
-      left: 5em;
-      z-index: 5;
+  form {
+    input[type='text'],
+    input[type='email'] {
+      width: 25.5em;
     }
   }
 `;

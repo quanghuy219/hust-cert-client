@@ -10,4 +10,9 @@ export const accountApi = {
     const params = { name, email, school, department };
     return httpRequest.post(`/admin/lecturers`, params);
   },
+
+  registerAdmin: ({ name, email, super_admin }) => {
+    const params = { name, email, super_admin };
+    return httpRequest.post(`/admin`, params);
+  },
 };

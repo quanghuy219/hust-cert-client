@@ -10,6 +10,7 @@ export const accountAction = {
       (res) => {
         console.log('response', res);
         generalUtils.showSuccessNotification(res.message);
+        return res.data;
       },
       (error) => {
         generalUtils.showErrorNotification(error.message);
@@ -22,6 +23,20 @@ export const accountAction = {
       (res) => {
         console.log('response', res);
         generalUtils.showSuccessNotification(res.message);
+        return res.data;
+      },
+      (error) => {
+        generalUtils.showErrorNotification(error.message);
+      },
+    );
+  },
+
+  registerAdminAccount: ({ name, email, super_admin }) => {
+    return accountApi.registerAdmin({ name, email, super_admin }).then(
+      (res) => {
+        console.log('response', res);
+        generalUtils.showSuccessNotification(res.message);
+        return res.data;
       },
       (error) => {
         generalUtils.showErrorNotification(error.message);
