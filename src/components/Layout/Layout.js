@@ -18,21 +18,11 @@ import Footer from '../Footer';
 import Sidebar from '../Sidebar';
 
 // Dashboard component is loaded directly as an example of server side rendering
-import Dashboard from '../../pages/dashboard'
-import Buttons from '../../pages/buttons'
-import Charts from '../../pages/charts'
-import Maps from '../../pages/google'
-import NotFound from '../../pages/notFound'
-import Icons from '../../pages/icons'
-import Enrollment from '../../pages/enrollment'
-import Tables from '../../pages/tables'
-import Notifications from '../../pages/notifications'
-import Posts from '../../pages/posts'
-import Profile from '../../pages/profile'
-import Privacy from '../../pages/privacy'
-import Transript from '../../pages/transcript'
-import Verification from '../../pages/verification'
-
+import Dashboard from '../../pages/dashboard';
+import NotFound from '../../pages/notFound';
+import Enrollment from '../../pages/enrollment';
+import Transript from '../../pages/transcript';
+import Verification from '../../pages/verification';
 import { Role } from '../../constants';
 import { logoutUser } from '../../actions/user';
 
@@ -71,9 +61,9 @@ class Layout extends React.Component {
     const verifierRoute = (
       <Switch>
         <Route path="/verification/:shareCode" exact component={Verification} />
-        <Route component={NotFound}/>
+        <Route component={NotFound} />
       </Switch>
-    )
+    );
     if (Role.getAdminRoles().includes(this.props.role)) {
       return adminRoute;
     } else if (this.props.role === Role.LECTURER) {
