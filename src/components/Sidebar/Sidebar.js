@@ -13,7 +13,6 @@ class Sidebar extends React.Component {
     const adminItems = (
       <div>
         <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="Typography" headerLink="/home/admin/typography" glyph="typography" />
         <LinksGroup header="Tables Basic" headerLink="/home/admin/tables" glyph="tables" />
         <LinksGroup
           header="Notifications"
@@ -62,7 +61,13 @@ class Sidebar extends React.Component {
     const studentItems = (
       <div>
         <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="Tables Basic" headerLink="/home/student/tables" glyph="tables" />
+        <LinksGroup header="History" headerLink="/home/history" glyph="tables" />
+      </div>
+    );
+
+    const verifierItems = (
+      <div>
+        <LinksGroup header="Dashboard" headerLink="#" glyph="dashboard" />
       </div>
     );
 
@@ -70,8 +75,10 @@ class Sidebar extends React.Component {
       return adminItems;
     } else if (this.props.role === Role.LECTURER) {
       return lecturerItems;
-    } else {
+    } else if (this.props.role === Role.STUDENT){
       return studentItems;
+    } else if (this.props.role === Role.VERIFIER) {
+      return verifierItems;
     }
   }
 

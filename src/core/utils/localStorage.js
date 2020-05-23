@@ -5,4 +5,7 @@ export const lcStorage = {
   get: (key) => {
     return JSON.parse(localStorage.getItem(key));
   },
+  delete: (key) => {
+    localStorage.removeItem(key);
+  }
 };

@@ -6,6 +6,7 @@ const userRole = lcStorage.get('role') || '';
 const user = lcStorage.get('user') || { email: '', name: '' };
 
 const initialState = {
+  id: "",
   access_token: token,
   email: user.email,
   name: user.name,
@@ -22,6 +23,7 @@ export default function auth(state = initialState, action) {
       });
     case LOGIN_SUCCESS:
       return Object.assign({}, state, {
+        id: action.payload.data.id,
         email: action.payload.data.email,
         name: action.payload.data.name,
         role: action.payload.role,

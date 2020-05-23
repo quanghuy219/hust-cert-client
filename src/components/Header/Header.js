@@ -23,16 +23,18 @@ import {
 import { NavLink } from 'react-router-dom';
 
 import photo from '../../images/photo.jpg';
-import { loginAction } from '../../actions/user';
+import { logoutUser } from '../../actions/user';
 import s from './Header.module.scss';
 
 class Header extends React.Component {
   static propTypes = {
     sidebarToggle: PropTypes.func,
+    showDropdown: PropTypes.bool,
   };
 
   static defaultProps = {
     sidebarToggle: () => {},
+    showDropdown: true,
   };
 
   state = { isOpen: false };
@@ -60,25 +62,28 @@ class Header extends React.Component {
             <i className="fa fa-bars fa-2x text-muted" />
           </NavItem>
         </Nav>
-        <Nav className="ml-auto">
-          <Dropdown isOpen={isOpen} toggle={this.toggleDropdown}>
-            <DropdownToggle nav>
-              <img
-                className={cx('rounded-circle mr-sm', s.adminPhoto)}
-                src={photo}
-                alt="administrator"
-              />
-              <span className="text-body">{this.props.auth.name}</span>
-              <i className={cx('fa fa-angle-down ml-sm', s.arrow, { [s.arrowActive]: isOpen })} />
-            </DropdownToggle>
-            <DropdownMenu style={{ width: '100%' }}>
-              <DropdownItem>
-                <NavLink to="/home/profile">Profile</NavLink>
-              </DropdownItem>
-              <DropdownItem onClick={this.doLogout}>Logout</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </Nav>
+
+        {this.props.showDropdown && (
+          <Nav className="ml-auto">
+            <Dropdown isOpen={isOpen} toggle={this.toggleDropdown}>
+              <DropdownToggle nav>
+                <img
+                  className={cx('rounded-circle mr-sm', s.adminPhoto)}
+                  src={photo}
+                  alt="administrator"
+                />
+                <span className="text-body">{this.props.auth.name}</span>
+                <i className={cx('fa fa-angle-down ml-sm', s.arrow, { [s.arrowActive]: isOpen })} />
+              </DropdownToggle>
+              <DropdownMenu style={{ width: '100%' }}>
+                <DropdownItem>
+                  <NavLink to="/home/profile">Profile</NavLink>
+                </DropdownItem>
+                <DropdownItem onClick={this.doLogout}>Logout</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </Nav>
+        )}
       </Navbar>
     );
   }
@@ -92,7 +97,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  logout: loginAction.logoutUser,
+  logout: logoutUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

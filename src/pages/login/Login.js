@@ -34,7 +34,6 @@ class Login extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log();
     if (nextProps.errorMessage) {
       this.setState({ errorMessage: nextProps.errorMessage });
     }

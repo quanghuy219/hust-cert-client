@@ -12,4 +12,15 @@ export const certificateAction = {
       },
     );
   },
+
+  downloadCertificateFile: (certID) => {
+    return certificateApi.downloadCertificate(certID).then(
+      res => {
+
+      },
+      error => {
+        generalUtils.showErrorNotification(error.message);
+      }
+    )
+  }
 };

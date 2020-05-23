@@ -101,7 +101,6 @@ class Enrollment extends React.Component {
 
   openCertificateVerificationModal(certID, type) {
     certificateAction.getCertificateContent(certID, type).then(data => {
-			console.log(JSON.parse(data))
       this.setState({
         openModal: true,
 				certificate: JSON.parse(data),
@@ -205,7 +204,7 @@ class Enrollment extends React.Component {
               disabled={!this.props.class.certificate_template_created}
               onClick={this.issueCertificates}
             >
-              Create Certificate Template
+              Issue Digital Certificate
             </Button>
           )}
         </div>

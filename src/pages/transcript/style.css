@@ -1,0 +1,11 @@
+.verification-modal {
+  overflow-wrap: break-word;
+}
+.verification-modal .modal-body span:first-child {
+  display: inline-block;
+  text-transform: capitalize;
+  margin-right: 2em;
+}
+.verification-modal .modal-body span:first-child:after {
+  content: ':';
+}

@@ -13,12 +13,17 @@ export class Role {
   static SUPER_ADMIN = 'super_admin';
   static LECTURER = 'lecturer';
   static STUDENT = 'student';
+  static VERIFIER = 'verifier';
 
   static getAdminRoles() {
     return [this.ADMIN, this.SUPER_ADMIN];
   }
 
-  static getAll() {
+  static requiredLoginRoles() {
     return [this.SUPER_ADMIN, this.ADMIN, this.LECTURER, this.STUDENT];
+  }
+
+  static getAll() {
+    return [this.SUPER_ADMIN, this.ADMIN, this.LECTURER, this.STUDENT, this.VERIFIER];
   }
 }

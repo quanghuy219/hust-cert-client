@@ -6,7 +6,7 @@ import { lcStorage } from '../utils/localStorage';
 
 const BASE_URL = config.BASE_URL;
 
-function getHeaders() {
+export function getHeaders() {
   return {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + lcStorage.get('access_token'),
