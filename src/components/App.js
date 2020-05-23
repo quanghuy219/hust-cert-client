@@ -7,9 +7,8 @@ import { ToastContainer, Slide } from 'react-toastify';
 import '../styles/theme.scss';
 import '../styles/style.css';
 import LayoutComponent from '../components/Layout';
-import Login from '../pages/login';
 import Register from '../pages/register';
-import ErrorPage from '../pages/error';
+import Login from '../pages/login';
 import { logoutUser } from '../actions/user';
 import { Role } from '../constants';
 
@@ -47,12 +46,10 @@ class App extends React.PureComponent {
     
                     <Route path="/register" exact component={Register}/>
                     <Route path="/login" exact component={Login}/>
-                    <Route path="/error" exact component={ErrorPage}/>
                     <Route path="/verification/:shareCode" exact render={(props) => <LayoutComponent {...props} verifier={true} />} />
                 </Switch>
               </BrowserRouter>
         </div>
-
     );
   }
 }

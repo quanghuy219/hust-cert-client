@@ -1,0 +1,9 @@
+.register-success-modal .modal-body > div > div > span:first-child {
+  display: inline-block;
+  width: 5em;
+  text-transform: capitalize;
+  margin-right: 2em;
+}
+.register-success-modal .modal-body > div > div > span:first-child:after {
+  content: ':';
+}

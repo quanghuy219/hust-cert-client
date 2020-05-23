@@ -31,7 +31,7 @@ class Dashboard extends Component {
     }
   }
 
-  handlePageClick = data => {
+  handlePageClick = (data) => {
     let selected = data.selected + 1;
 
     this.setState({ page: selected }, () => {
@@ -58,7 +58,7 @@ class Dashboard extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.classes.map(row => (
+            {this.props.classes.map((row) => (
               <tr key={row.id}>
                 <td>{row.semester}</td>
                 <td>

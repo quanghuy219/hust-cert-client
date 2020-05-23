@@ -24,6 +24,8 @@ import Enrollment from '../../pages/enrollment';
 import Transript from '../../pages/transcript';
 import Verification from '../../pages/verification';
 import VerificationHistory from '../../pages/verificationHistory';
+import Register from '../../pages/register';
+
 import { Role } from '../../constants';
 import { logoutUser } from '../../actions/user';
 
@@ -41,6 +43,7 @@ class Layout extends React.Component {
       <Switch>
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/classes/:classID" exact component={Enrollment} />
+        <Route path="/home/register" exact component={Register} />
         <Redirect to="/" />
       </Switch>
     );
