@@ -49,7 +49,6 @@ export const loginAction = {
           dispatch(loginAction.loginSuccess(res));
         },
         (error) => {
-          console.log(error);
           dispatch(loginAction.loginError(error));
         },
       );
@@ -65,7 +64,6 @@ export const loginAction = {
           dispatch(loginAction.loginSuccess(res));
         },
         (error) => {
-          console.log(error);
           dispatch(loginAction.loginError(error));
         },
       );

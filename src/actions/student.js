@@ -17,7 +17,6 @@ export const studentAction = {
         },
         (error) => {
           generalUtils.showErrorNotification(error.message);
-          console.log(error);
         },
       );
     };

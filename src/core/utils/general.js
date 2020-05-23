@@ -150,7 +150,6 @@ export const generalUtils = {
 		// this.dateSet = date.toDateString().split(' ');
 		let userTimezoneOffset = date.getTimezoneOffset() * 60000;
 		let localTime = new Date(date.getTime() - userTimezoneOffset);
-		console.log(localTime.toLocaleTimeString())
 		return localTime.toLocaleString()
 	}
 }

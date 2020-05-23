@@ -101,7 +101,6 @@ class Enrollment extends React.Component {
 
   openCertificateVerificationModal(certID, type) {
     certificateAction.getCertificateContent(certID, type).then(data => {
-			console.log(JSON.parse(data))
       this.setState({
         openModal: true,
 				certificate: JSON.parse(data),

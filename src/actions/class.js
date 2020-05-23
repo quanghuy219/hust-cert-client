@@ -33,7 +33,6 @@ export const classAction = {
         },
         error => {
           generalUtils.showErrorNotification(error.message);
-          console.log(error);
         },
       );
     };
@@ -47,7 +46,6 @@ export const classAction = {
         },
         error => {
           generalUtils.showErrorNotification(error.message);
-          console.log(error);
         },
       );
     };
@@ -62,7 +60,6 @@ export const classAction = {
         error => {
           generalUtils.showErrorNotification(error.message);
           router.push('/home');
-          console.log(error);
         },
       );
     };

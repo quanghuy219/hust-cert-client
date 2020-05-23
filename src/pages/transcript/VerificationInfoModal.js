@@ -26,12 +26,7 @@ class VerificationInfoModal extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(generalUtils.parseDateTime(this.props.verification.expirationTime))
-  }
-
   static getDerivedStateFromProps(props, state) {
-    console.log(generalUtils.parseDateTime(props.verification.expirationTime))
     return {
       verifier: props.verification.verifier,
       shareUrl: config.VERIFICATION_URL + props.verification.shareCode,
