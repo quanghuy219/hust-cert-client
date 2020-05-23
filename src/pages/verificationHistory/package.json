@@ -1,0 +1,6 @@
+{
+  "name": "VerificationHistory",
+  "version": "0.0.0",
+  "main": "./VerificationHistory.js",
+  "private": true
+}

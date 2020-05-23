@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link, Redirect } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 import Icon from '../Icon';
 import LinksGroup from './LinksGroup/LinksGroup';
@@ -13,7 +13,6 @@ class Sidebar extends React.Component {
     const adminItems = (
       <div>
         <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="Typography" headerLink="/home/admin/typography" glyph="typography" />
         <LinksGroup header="Tables Basic" headerLink="/home/admin/tables" glyph="tables" />
         <LinksGroup
           header="Notifications"
@@ -61,7 +60,7 @@ class Sidebar extends React.Component {
     const studentItems = (
       <div>
         <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="Tables Basic" headerLink="/home/student/tables" glyph="tables" />
+        <LinksGroup header="History" headerLink="/home/history" glyph="tables" />
       </div>
     );
 

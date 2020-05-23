@@ -29,7 +29,7 @@ class VerificationInfoModal extends React.Component {
   static getDerivedStateFromProps(props, state) {
     return {
       verifier: props.verification.verifier,
-      shareUrl: config.VERIFICATION_URL + props.verification.shareCode,
+      shareUrl: generalUtils.generateSharedURL(props.verification.shareCode),
       expirationTime: generalUtils.parseDateTime(props.verification.expirationTime),
     };
   }

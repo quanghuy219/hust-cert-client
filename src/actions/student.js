@@ -4,6 +4,10 @@ import { generalUtils } from '../core/utils/general';
 export const FETCH_ENROLLMENTS_SUCCESS = 'FETCH_ENROLLMENTS_SUCCESS';
 
 export const studentAction = {
+  handleError(error) {
+    generalUtils.showErrorNotification(error.message);
+  },
+
   fetchStudentEnrollmentSuccess: (res) => ({
     type: FETCH_ENROLLMENTS_SUCCESS,
     payload: res,
@@ -16,10 +20,20 @@ export const studentAction = {
           dispatch(studentAction.fetchStudentEnrollmentSuccess(res));
         },
         (error) => {
-          generalUtils.showErrorNotification(error.message);
+          studentAction.handleError(error)
         },
       );
     };
+  },
+
+  fetchStudentVerificationHistory: () => {
+    return studentApi.getVerficationHistory().then(
+      res => {
+        return Promise.resolve(res)
+      },
+      error => {
+        studentAction.handleError(error)
+      })
   },
 
   createVerificationRequest: (verifier, enrollments = [], degrees = [], duration) => {
@@ -28,7 +42,7 @@ export const studentAction = {
         return Promise.resolve(res)
       },
       error => {
-        generalUtils.showErrorNotification(error.message);
+        studentAction.handleError(error)
       }
     )
   }

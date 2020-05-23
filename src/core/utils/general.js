@@ -5,6 +5,7 @@
 import { toast } from 'react-toastify';
 
 import { persistUtils } from './persist'
+import config from '../configs'
 
 
 export const generalUtils = {
@@ -151,5 +152,9 @@ export const generalUtils = {
 		let userTimezoneOffset = date.getTimezoneOffset() * 60000;
 		let localTime = new Date(date.getTime() - userTimezoneOffset);
 		return localTime.toLocaleString()
+	},
+
+	generateSharedURL(shareCode) {
+		return config.VERIFICATION_URL + shareCode
 	}
 }

@@ -23,6 +23,7 @@ import NotFound from '../../pages/notFound';
 import Enrollment from '../../pages/enrollment';
 import Transript from '../../pages/transcript';
 import Verification from '../../pages/verification';
+import VerificationHistory from '../../pages/verificationHistory';
 import { Role } from '../../constants';
 import { logoutUser } from '../../actions/user';
 
@@ -54,6 +55,7 @@ class Layout extends React.Component {
       <Switch>
         <Route path="/home" exact component={Transript} />
         <Route path="/home/transcript" exact component={Transript} />
+        <Route path="/home/history" exact component={VerificationHistory} />
         <Redirect to="/" />
       </Switch>
     );

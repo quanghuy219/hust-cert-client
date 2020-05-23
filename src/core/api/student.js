@@ -5,6 +5,10 @@ export const studentApi = {
     return httpRequest.get('/students/me/enrollments');
   },
 
+  getVerficationHistory: () => {
+    return httpRequest.get('/students/me/verifications')
+  },
+
   createVerfificationRequest: (verifier, enrollments = [], degrees = [], duration) => {
     const params = {
       verifier,
