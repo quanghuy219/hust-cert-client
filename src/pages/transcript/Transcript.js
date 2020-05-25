@@ -136,12 +136,16 @@ class Transcript extends React.Component {
 
         <div style={{ marginBottom: '20px' }}>
           {!this.state.selectVerificationRequest ? (
+            <React.Fragment>
             <Button color="info" onClick={() => this.setState({ selectVerificationRequest: true })}>
-              Let verifier access your records
+              Public your transcript
             </Button>
+            <br/>
+            </React.Fragment>
           ) : (
             <div style={{ width: '300px' }}>
               <Form onSubmit={this.submitVerificationRequest}>
+                <p>Select courses that you want to publish grade and digital certificate</p>
                 <span className="class-buttons" style={{ marginLeft: 0 }}>
                   <Button color="info" type="submit">
                     Submit

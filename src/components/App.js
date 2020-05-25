@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify';
-
+import ClipLoader from 'react-spinners/ClipLoader';
+import { css } from '@emotion/core';
 import LayoutComponent from '../components/Layout';
 import Register from '../pages/register';
 import Login from '../pages/login';
@@ -12,6 +13,14 @@ import { Role } from '../constants';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../styles/theme.scss';
 import '../styles/style.css';
+
+const override = css`
+  top: 80px;
+  positiion: relative;
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 const PrivateRoute = ({ dispatch, component, isAuthenticated, role, ...rest }) => {
   if (!isAuthenticated || !Role.getAll().includes(role)) {
@@ -51,6 +60,10 @@ class App extends React.PureComponent {
           </Switch>
         </BrowserRouter>
 
+        <div className="sweet-loading" style={{position: "relative", top: "80px"}}>
+          <ClipLoader css={override} size={50} color={'#123abc'} loading={this.props.loader.loading} />
+        </div>
+
         <ToastContainer
           position="bottom-left"
           autoClose={5000}
@@ -66,6 +79,7 @@ class App extends React.PureComponent {
 const mapStateToProps = (state) => ({
   role: state.auth.role,
   isAuthenticated: state.auth.isAuthenticated,
+  loader: state.loader
 });
 
 export default connect(mapStateToProps)(App);

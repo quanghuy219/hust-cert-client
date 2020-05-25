@@ -43,6 +43,7 @@ export const studentAction = {
       },
       error => {
         studentAction.handleError(error)
+        throw Error
       }
     )
   }

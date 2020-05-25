@@ -127,6 +127,7 @@ export const generalUtils = {
 			position: 'bottom-left',
 			autoClose: 3000
 		})
+		throw Error
 	},
 
 	showSuccessNotification: (message) => {

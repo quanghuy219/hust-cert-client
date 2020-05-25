@@ -9,10 +9,13 @@ import { Role } from '../../constants';
 import Certificate from '../certificate';
 import './style.css';
 
+
+
 class Enrollment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       updateGrade: false,
       classID: null,
       class: {

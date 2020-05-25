@@ -1,5 +1,6 @@
 import { classApi, lecturerApi } from '../core/api';
 import { generalUtils } from '../core/utils/general';
+import { startLoader, stopLoader } from './loader'
 
 export const FETCH_CLASSES_SUCCESS = 'FETCH_CLASSES_SUCCESS';
 export const FETCH_CLASS_SUCCESS = 'FETCH_CLASS_SUCCESS';
@@ -95,12 +96,15 @@ export const classAction = {
 
   createCertificateTemplates: classID => {
     return async function(dispatch) {
+      dispatch(startLoader())
       classApi.createCertificateTemplates(classID).then(
         res => {
           dispatch(classAction.fetchClassSuccess(res));
+          dispatch(stopLoader())
           generalUtils.showSuccessNotification('Create certificate templates successfully');
         },
         error => {
+          dispatch(stopLoader())
           generalUtils.showErrorNotification(error.message || "Something went wrong");
         },
       );
@@ -109,12 +113,15 @@ export const classAction = {
 
   issueCertificates: classID => {
     return async function(dispatch) {
+      dispatch(startLoader())
       classApi.issueCertificates(classID).then(
         res => {
           dispatch(classAction.fetchClassSuccess(res));
+          dispatch(stopLoader())
           generalUtils.showSuccessNotification('Create certificates successfully');
         },
         error => {
+          dispatch(stopLoader())
           generalUtils.showErrorNotification(error.message || "Something went wrong");
         },
       );
