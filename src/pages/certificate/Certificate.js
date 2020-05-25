@@ -34,7 +34,7 @@ class Certificate extends React.PureComponent {
 }
 
 Certificate.propTypes = {
-  certificate: PropTypes.object.isRequired,
+  certificate: PropTypes.object,
   toggle: PropTypes.func.isRequired,
 };
 Certificate.defaultProps = {

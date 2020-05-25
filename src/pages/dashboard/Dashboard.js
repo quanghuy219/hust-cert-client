@@ -67,8 +67,8 @@ class Dashboard extends Component {
                 <td>{row.course.id}</td>
                 <td>{row.course.name}</td>
                 <td>{row.lecturer.name}</td>
-                <td>{generalUtils.parseDate(row.grade_submitted_time)}</td>
-                <td>{generalUtils.parseDate(row.grade_approved_time)}</td>
+                <td>{generalUtils.parseDateTime(row.grade_submitted_time)}</td>
+                <td>{generalUtils.parseDateTime(row.grade_approved_time)}</td>
               </tr>
             ))}
           </tbody>

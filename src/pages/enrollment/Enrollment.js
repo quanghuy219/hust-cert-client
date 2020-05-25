@@ -119,7 +119,7 @@ class Enrollment extends React.Component {
               <td>
                 <p> Semester: {this.props.class.semester} </p>
                 <p> Course: {this.props.class.course.name} </p>
-                <p> School: {this.props.class.course.school} </p>
+                <p> School: { this.props.class.course.school ? this.props.class.course.school.name : ""} </p>
                 <p> Credits: {this.props.class.course.credits} </p>
               </td>
               <td>
