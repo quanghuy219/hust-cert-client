@@ -7,6 +7,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { css } from '@emotion/core';
 import LayoutComponent from '../components/Layout';
 import Register from '../pages/register';
+import Courses from '../pages/courses';
 import Login from '../pages/login';
 import { logoutUser } from '../actions/user';
 import { Role } from '../constants';
@@ -51,6 +52,7 @@ class App extends React.PureComponent {
             />
 
             <Route path="/register" exact component={Register} />
+            <Route path="/courses" exact component={Courses} />
             <Route path="/login" exact component={Login} />
             <Route
               path="/verification/:shareCode"
@@ -60,8 +62,13 @@ class App extends React.PureComponent {
           </Switch>
         </BrowserRouter>
 
-        <div className="sweet-loading" style={{position: "relative", top: "80px"}}>
-          <ClipLoader css={override} size={50} color={'#123abc'} loading={this.props.loader.loading} />
+        <div className="sweet-loading" style={{ position: 'relative', top: '80px' }}>
+          <ClipLoader
+            css={override}
+            size={50}
+            color={'#123abc'}
+            loading={this.props.loader.loading}
+          />
         </div>
 
         <ToastContainer
@@ -79,7 +86,7 @@ class App extends React.PureComponent {
 const mapStateToProps = (state) => ({
   role: state.auth.role,
   isAuthenticated: state.auth.isAuthenticated,
-  loader: state.loader
+  loader: state.loader,
 });
 
 export default connect(mapStateToProps)(App);

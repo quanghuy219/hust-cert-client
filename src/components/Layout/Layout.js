@@ -25,6 +25,7 @@ import Transript from '../../pages/transcript';
 import Verification from '../../pages/verification';
 import VerificationHistory from '../../pages/verificationHistory';
 import Register from '../../pages/register';
+import Courses from '../../pages/courses';
 
 import { Role } from '../../constants';
 import { logoutUser } from '../../actions/user';
@@ -44,6 +45,7 @@ class Layout extends React.Component {
         <Route path="/home" exact component={Dashboard} />
         <Route path="/home/classes/:classID" exact component={Enrollment} />
         <Route path="/home/register" exact component={Register} />
+        <Route path="/home/courses" exact component={Courses} />
         <Redirect to="/" />
       </Switch>
     );

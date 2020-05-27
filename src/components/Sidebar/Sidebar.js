@@ -20,6 +20,7 @@ class Sidebar extends React.Component {
           glyph="notifications"
         />
         <LinksGroup header="Register" headerLink="/home/register" glyph="typography" />
+        <LinksGroup header="Courses" headerLink="/home/courses" glyph="typography" />
         <LinksGroup
           header="Components"
           headerLink="/home/admin/components"
@@ -75,7 +76,7 @@ class Sidebar extends React.Component {
       return adminItems;
     } else if (this.props.role === Role.LECTURER) {
       return lecturerItems;
-    } else if (this.props.role === Role.STUDENT){
+    } else if (this.props.role === Role.STUDENT) {
       return studentItems;
     } else if (this.props.role === Role.VERIFIER) {
       return verifierItems;

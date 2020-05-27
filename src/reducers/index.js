@@ -5,8 +5,9 @@ import navigation from './navigation';
 import posts from './posts';
 import classes from './class';
 import student from './student';
-import loader from './loader'
+import loader from './loader';
 
+import courses from './courses';
 
 export default combineReducers({
   auth,
@@ -15,5 +16,6 @@ export default combineReducers({
   posts,
   classes,
   student,
-  loader
+  loader,
+  courses,
 });
