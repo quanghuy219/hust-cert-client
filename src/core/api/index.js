@@ -5,3 +5,4 @@ export { certificateApi } from './certificate';
 export { studentApi } from './student';
 export { verificationApi } from './verification';
 export { accountApi } from './account';
+export { coursesApi } from './courses';
