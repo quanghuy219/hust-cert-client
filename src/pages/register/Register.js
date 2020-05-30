@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { Role } from '../../constants/';
 import { useSelector } from 'react-redux';
 import { Modal, ModalHeader, ModalBody, Button, ModalFooter } from 'reactstrap';
+import { schoolsApi } from '../../core/api/schools';
+import { generalUtils } from '../../core/utils/general';
 import './style.css';
 
 const BASE_EMAIL = `@${config.BASE_DOMAIN}`;
@@ -44,6 +46,9 @@ const Register = () => {
 
   const [info, setInfo] = useState({ ...defaultInfo });
 
+  const [schools, setSchools] = useState([]);
+  const [departments, setDepartments] = useState([]);
+
   const [modal, setModal] = useState(false);
   const toggleModal = () => setModal(!modal);
 
@@ -66,7 +71,7 @@ const Register = () => {
   };
 
   const updateLecturerInfo = ({ name, email, school, department }) => {
-    let newInfo = { ...info };
+    const newInfo = { ...info };
 
     if (typeof name !== 'undefined') {
       newInfo.name = name;
@@ -152,7 +157,17 @@ const Register = () => {
       nextAction = accountAction.registerAdminAccount(info);
     }
 
-    nextAction.then((data) => {
+    nextAction.then((res) => {
+      const data = { ...res };
+
+      if (res?.school) {
+        data.school = res.school.name;
+      }
+
+      if (res?.department) {
+        data.department = res.department.name;
+      }
+
       setModalContent(renderModalContent(data));
       toggleModal();
     });
@@ -171,6 +186,7 @@ const Register = () => {
   const switchToLecturer = () => {
     setType(Role.LECTURER);
     setInfo({ ...defaultInfo });
+    fetchSchools();
   };
 
   const switchToAdmin = () => {
@@ -181,6 +197,48 @@ const Register = () => {
   const switchToSuperAdmin = () => {
     setType(Role.SUPER_ADMIN);
     setInfo({ ...defaultInfo, super_admin: true });
+  };
+
+  const fetchSchools = () => {
+    schoolsApi.getSchools().then(
+      (res) => {
+        setSchools(res);
+      },
+      (error) => {
+        setSchools([]);
+        generalUtils.showErrorNotification(error.message);
+      },
+    );
+  };
+
+  const fetchDepartments = (school_id) => {
+    schoolsApi.getDepartmentsBySchoolId({ school_id }).then(
+      (res) => {
+        setDepartments(res);
+      },
+      (error) => {
+        setDepartments([]);
+        generalUtils.showErrorNotification(error.message);
+      },
+    );
+  };
+
+  const handleSelectSchool = (event) => {
+    const school_id = parseInt(event.target.value) || '';
+
+    setInfo((info) => ({ ...info, department: '' }));
+    setDepartments([]);
+
+    if (school_id) {
+      fetchDepartments(school_id);
+    }
+
+    setInfo((info) => ({ ...info, school: school_id }));
+  };
+
+  const handleSelectDepartment = (event) => {
+    const department_id = parseInt(event.target.value) || '';
+    setInfo((info) => ({ ...info, department: department_id }));
   };
 
   const SwitchButtons = (
@@ -276,27 +334,30 @@ const Register = () => {
       </div>
       <div className="form-group">
         <label>School</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="School"
-          name="school"
-          onChange={handleTextChange}
-          value={info.school || ''}
-          required
-        />
+        <select value={info.school} onChange={handleSelectSchool} className="form-control" required>
+          <option value="">Choose...</option>
+          {schools.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="form-group">
         <label>Department</label>
-        <input
-          type="text"
+        <select
+          value={info.department}
+          onChange={handleSelectDepartment}
           className="form-control"
-          placeholder="Department"
-          name="department"
-          onChange={handleTextChange}
-          value={info.department || ''}
           required
-        />
+        >
+          <option value="">Choose...</option>
+          {departments.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );
@@ -387,7 +448,8 @@ const View = styled.div`
 
   form {
     input[type='text'],
-    input[type='email'] {
+    input[type='email'],
+    select {
       width: 25.5em;
     }
   }
