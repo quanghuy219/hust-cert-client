@@ -193,7 +193,7 @@ class Enrollment extends React.Component {
 
         <div className="class-buttons">
           <Button color="info" onClick={this.toggleModalEnrollStudentOpen}>
-            Enroll a student
+            Add student
           </Button>
 
           {!this.state.updateGrade ? (
