@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Table, Button, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { classAction } from '../../actions/class';
+import { classApi } from '../../core/api';
 import { certificateAction } from '../../actions/certificate';
 import { generalUtils } from '../../core/utils/general';
 import { Role } from '../../constants';
 import Certificate from '../certificate';
 import './style.css';
-
-
 
 class Enrollment extends React.Component {
   constructor(props) {
@@ -22,8 +22,10 @@ class Enrollment extends React.Component {
         enrollments: [],
       },
       modalOpen: false,
-			certificate: null,
-			certificateType: ""
+      certificate: null,
+      certificateType: '',
+      modalEnrollStudentOpen: false,
+      studentID: null,
     };
     this.handleUpdateStudentGrade = this.handleUpdateStudentGrade.bind(this);
     this.submitGrades = this.submitGrades.bind(this);
@@ -32,6 +34,9 @@ class Enrollment extends React.Component {
     this.issueCertificates = this.issueCertificates.bind(this);
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
     this.openCertificateVerificationModal = this.openCertificateVerificationModal.bind(this);
+    this.enrollStudent = this.enrollStudent.bind(this);
+    this.toggleModalEnrollStudentOpen = this.toggleModalEnrollStudentOpen.bind(this);
+    this.onStudentIDInputChange = this.onStudentIDInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -53,7 +58,7 @@ class Enrollment extends React.Component {
 
   handleUpdateStudentGrade(e, studentID, type) {
     let enrollments = Object.assign(this.state.class.enrollments);
-    enrollments.forEach(element => {
+    enrollments.forEach((element) => {
       if (element.student.id === studentID) {
         element[type] = e.target.value;
       }
@@ -67,7 +72,7 @@ class Enrollment extends React.Component {
 
   submitGrades() {
     const enrollments = this.state.class.enrollments;
-    const grades = enrollments.map(e => {
+    const grades = enrollments.map((e) => {
       return {
         student_id: e.student.id,
         midterm: e.midterm,
@@ -90,26 +95,53 @@ class Enrollment extends React.Component {
   }
 
   toggleCertificateVerificationModal() {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       let newState = {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-				newState.certificate = null;
-				newState.certificateType = ""
+        newState.certificate = null;
+        newState.certificateType = '';
       }
       return newState;
     });
   }
 
   openCertificateVerificationModal(certID, type) {
-    certificateAction.getCertificateContent(certID, type).then(data => {
+    certificateAction.getCertificateContent(certID, type).then((data) => {
       this.setState({
         openModal: true,
-				certificate: JSON.parse(data),
-				certificateType: type
+        certificate: JSON.parse(data),
+        certificateType: type,
       });
     });
+  }
+
+  enrollStudent() {
+    const studentID = this.state.studentID;
+    const classID = parseInt(this.state.classID);
+    classApi.enrollStudent({ studentID, classID }).then(
+      (res) => {
+        generalUtils.showSuccessNotification(res.message);
+        this.props.fetchClass(classID);
+        this.toggleModalEnrollStudentOpen();
+        this.setState({ studentID: null });
+      },
+      (error) => {
+        generalUtils.showErrorNotification(error.message);
+      },
+    );
+  }
+
+  toggleModalEnrollStudentOpen() {
+    const modalEnrollStudentOpen = this.state.modalEnrollStudentOpen;
+    this.setState({
+      modalEnrollStudentOpen: !modalEnrollStudentOpen,
+    });
+  }
+
+  onStudentIDInputChange(event) {
+    this.setState({ studentID: event.target.value });
   }
 
   render() {
@@ -122,7 +154,11 @@ class Enrollment extends React.Component {
               <td>
                 <p> Semester: {this.props.class.semester} </p>
                 <p> Course: {this.props.class.course.name} </p>
-                <p> School: { this.props.class.course.school ? this.props.class.course.school.name : ""} </p>
+                <p>
+                  {' '}
+                  School:{' '}
+                  {this.props.class.course.school ? this.props.class.course.school.name : ''}{' '}
+                </p>
                 <p> Credits: {this.props.class.course.credits} </p>
               </td>
               <td>
@@ -156,6 +192,10 @@ class Enrollment extends React.Component {
         </Table>
 
         <div className="class-buttons">
+          <Button color="info" onClick={this.toggleModalEnrollStudentOpen}>
+            Add student
+          </Button>
+
           {!this.state.updateGrade ? (
             <Button
               color="info"
@@ -225,7 +265,7 @@ class Enrollment extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.class.enrollments.map(row => (
+            {this.state.class.enrollments.map((row) => (
               <tr key={row.student.id}>
                 <td>{row.student.id}</td>
                 <td>{row.student.name}</td>
@@ -235,7 +275,7 @@ class Enrollment extends React.Component {
                       className="grade-input"
                       name="midterm"
                       value={row.midterm}
-                      onChange={e => this.handleUpdateStudentGrade(e, row.student.id, 'midterm')}
+                      onChange={(e) => this.handleUpdateStudentGrade(e, row.student.id, 'midterm')}
                     />
                   ) : (
                     row.midterm
@@ -247,7 +287,7 @@ class Enrollment extends React.Component {
                       className="grade-input"
                       name="final"
                       value={row.final}
-                      onChange={e => this.handleUpdateStudentGrade(e, row.student.id, 'final')}
+                      onChange={(e) => this.handleUpdateStudentGrade(e, row.student.id, 'final')}
                     />
                   ) : (
                     row.final
@@ -256,13 +296,14 @@ class Enrollment extends React.Component {
                 <td>{row.grade}</td>
                 <td>
                   {row.certificate && row.certificate.template_url && (
-										<Button color="info"
-											onClick={() =>
-												this.openCertificateVerificationModal(row.certificate.id, 'template')
-											}
-										>
-											Display
-										</Button>
+                    <Button
+                      color="info"
+                      onClick={() =>
+                        this.openCertificateVerificationModal(row.certificate.id, 'template')
+                      }
+                    >
+                      Display
+                    </Button>
                   )}
                 </td>
                 <td>
@@ -286,9 +327,43 @@ class Enrollment extends React.Component {
         <Certificate
           openModal={this.state.openModal}
           toggle={this.toggleCertificateVerificationModal}
-					certificate={this.state.certificate}
-					type={this.state.certificateType}
+          certificate={this.state.certificate}
+          type={this.state.certificateType}
         />
+
+        <Modal
+          className={'register-success-modal'}
+          isOpen={this.state.modalEnrollStudentOpen}
+          toggle={this.toggleModalEnrollStudentOpen}
+          backdrop={true}
+          keyboard={true}
+        >
+          <ModalHeader toggle={this.toggleModalEnrollStudentOpen}>
+            Add a student to class
+          </ModalHeader>
+          <ModalBody>
+            <div className="form-group">
+              <label>Student ID</label>
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Student ID"
+                name="studentid"
+                onChange={this.onStudentIDInputChange}
+                value={this.state.studentID?.toString() ?? ''}
+                required
+              />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.enrollStudent}>
+              Submit
+            </Button>
+            <Button color="error" onClick={this.toggleModalEnrollStudentOpen}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
       </div>
     );
   }

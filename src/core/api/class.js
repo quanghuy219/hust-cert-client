@@ -6,7 +6,7 @@ export const classApi = {
     return httpRequest.get('/classes', params);
   },
 
-  getClass: classID => {
+  getClass: (classID) => {
     return httpRequest.get(`/classes/${classID}`);
   },
 
@@ -14,16 +14,22 @@ export const classApi = {
     return httpRequest.post(`/classes/${classID}/grades`, grades);
   },
 
-  approveGrades: classID => {
+  approveGrades: (classID) => {
     const params = { action: 'approve_grades' };
     return httpRequest.put(`/classes/${classID}`, params);
   },
 
-  createCertificateTemplates: classID => {
+  createCertificateTemplates: (classID) => {
     return httpRequest.post(`/classes/${classID}/certificate-templates`);
   },
 
-  issueCertificates: classID => {
+  issueCertificates: (classID) => {
     return httpRequest.post(`/classes/${classID}/certificates`);
+  },
+
+  enrollStudent: ({ studentID, classID }) => {
+    const params = { student_id: studentID, class_id: classID };
+
+    return httpRequest.post(`/enrollments`, params);
   },
 };
