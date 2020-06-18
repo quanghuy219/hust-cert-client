@@ -9,6 +9,7 @@ import LayoutComponent from '../components/Layout';
 import Register from '../pages/register';
 import Courses from '../pages/courses';
 import Login from '../pages/login';
+import Programs from '../pages/programs';
 import { logoutUser } from '../actions/user';
 import { Role } from '../constants';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -50,10 +51,7 @@ class App extends React.PureComponent {
               isAuthenticated={this.props.isAuthenticated}
               role={this.props.role}
             />
-
-            <Route path="/register" exact component={Register} />
-            <Route path="/courses" exact component={Courses} />
-            <Route path="/login" exact component={Login} />
+            
             <Route
               path="/verification/:shareCode"
               exact

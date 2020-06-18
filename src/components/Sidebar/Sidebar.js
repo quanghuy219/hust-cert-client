@@ -12,38 +12,11 @@ class Sidebar extends React.Component {
   renderSidebarItemByRole() {
     const adminItems = (
       <div>
-        <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="Tables Basic" headerLink="/home/admin/tables" glyph="tables" />
-        <LinksGroup
-          header="Notifications"
-          headerLink="/home/admin/notifications"
-          glyph="notifications"
-        />
-        <LinksGroup header="Register" headerLink="/home/register" glyph="typography" />
-        <LinksGroup header="Courses" headerLink="/home/courses" glyph="typography" />
-        <LinksGroup
-          header="Components"
-          headerLink="/home/admin/components"
-          childrenLinks={[
-            {
-              name: 'Buttons',
-              link: '/home/admin/components/buttons',
-            },
-            {
-              name: 'Charts',
-              link: '/home/admin/components/charts',
-            },
-            {
-              name: 'Icons',
-              link: '/home/admin/components/icons',
-            },
-            {
-              name: 'Maps',
-              link: '/home/admin/components/maps',
-            },
-          ]}
-          glyph="components"
-        />
+        <LinksGroup header="Dashboard" headerLink="/home" />
+        <LinksGroup header="Training Programs" headerLink="/home/programs" />
+        <LinksGroup header="Notifications" headerLink="/home/admin/notifications" />
+        <LinksGroup header="Register" headerLink="/home/register" />
+        <LinksGroup header="Courses" headerLink="/home/courses" />
       </div>
     );
 
@@ -61,14 +34,14 @@ class Sidebar extends React.Component {
 
     const studentItems = (
       <div>
-        <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="History" headerLink="/home/history" glyph="tables" />
+        <LinksGroup header="Dashboard" headerLink="/home" />
+        <LinksGroup header="History" headerLink="/home/history" />
       </div>
     );
 
     const verifierItems = (
       <div>
-        <LinksGroup header="Dashboard" headerLink="#" glyph="dashboard" />
+        <LinksGroup header="Dashboard" headerLink="#" />
       </div>
     );
 
