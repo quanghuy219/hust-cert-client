@@ -10,6 +10,10 @@ export const classApi = {
     return httpRequest.get(`/classes/${classID}`);
   },
 
+  createClass: ({ semester, course_id, lecturer_id }) => {
+    return httpRequest.post(`/classes`, { semester, course_id, lecturer_id });
+  },
+
   submitGrades: (classID, grades) => {
     return httpRequest.post(`/classes/${classID}/grades`, grades);
   },

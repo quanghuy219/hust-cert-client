@@ -9,4 +9,8 @@ export const schoolsApi = {
     const params = { school_id };
     return httpRequest.get(`/departments`, params);
   },
+
+  getLecturers: ({ school_id }) => {
+    return httpRequest.get('/lecturers', { school_id });
+  },
 };
