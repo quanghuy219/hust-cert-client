@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, FormGroup, Label, Input } from 'reactstrap';
 import { programApi } from '../../core/api/program';
 import { generalUtils } from '../../core/utils';
-import ReactPaginate from 'react-paginate';
+import Pagination from '../../components/Pagination';
 import './style.css'
 
 class Students extends React.Component {
@@ -19,6 +19,7 @@ class Students extends React.Component {
       status: '',
       graduateQualified: "",
     };
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
 
   componentDidMount() {
@@ -86,9 +87,6 @@ class Students extends React.Component {
 	}
 
   render() {
-    const itemsPerPage = this.state.itemsPerPage;
-    const pageCount = Math.ceil(this.state.totalItems / itemsPerPage) || 1;
-
     return (
       <div>
         <div className="d-flex justify-content-center filter-students">
@@ -132,19 +130,7 @@ class Students extends React.Component {
               ))}
             </tbody>
           </Table>
-          <ReactPaginate
-            previousLabel={'Previous'}
-            nextLabel={'Next'}
-            breakLabel={'...'}
-            breakClassName={'break-me'}
-            pageCount={pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={this.handlePageClick}
-            containerClassName={'pagination'}
-            subContainerClassName={'pages pagination'}
-            activeClassName={'active'}
-          />
+          <Pagination handlePageClick={this.handlePageClick} itemsPerPage={this.state.itemsPerPage} totalItems={this.state.totalItems} />
         </div>
       </div>
     );

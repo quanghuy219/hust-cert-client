@@ -15,6 +15,7 @@ import {
 import { programApi } from '../../core/api/program';
 import { schoolsApi } from '../../core/api/schools';
 import { generalUtils } from '../../core/utils';
+import Pagination from '../../components/Pagination';
 
 class Programs extends React.Component {
   constructor(props) {
@@ -23,16 +24,18 @@ class Programs extends React.Component {
       schools: [],
       programs: [],
       modalAddProgramOpen: false,
-      selectedSchoolId: null,
+      selectedSchoolId: 0,
       programName: '',
       page: 1,
       totalItems: 0,
       itemsPerPage: 20,
     };
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
 
   componentDidMount() {
     this.fetchSchools();
+    this.fetchPrograms();
   }
 
   fetchSchools = () => {
@@ -61,19 +64,21 @@ class Programs extends React.Component {
     );
   };
 
+  handlePageClick = (data) => {
+    let selected = data.selected + 1;
+
+    this.setState({ page: selected }, () => {
+      this.fetchPrograms();
+    });
+  };
+
   handleSelectSchool = (e) => {
     const selectedSchoolID = e.target.value;
-    if (!selectedSchoolID) return;
-
-    this.state.schools.forEach((school) => {
-      if (parseInt(selectedSchoolID) === school.id) {
-        this.setState({
-          selectedSchoolId: school.id,
-        }, () => {
-          this.fetchPrograms();
-        });
-      }
-    });
+    this.setState({
+      selectedSchoolId: selectedSchoolID
+    }, () => {
+      this.fetchPrograms();
+    })
   };
 
   toggleModalAddProgram = () => {
@@ -117,7 +122,7 @@ class Programs extends React.Component {
               id="selectSchoolInput"
               onChange={this.handleSelectSchool}
             >
-              <option value="">Choose...</option>
+              <option value="0">All...</option>
               {this.state.schools.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
@@ -137,9 +142,9 @@ class Programs extends React.Component {
           <Table>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Degree</th>
+                <th style={{width: "5%"}}>ID</th>
+                <th style={{width: "20%"}}>Name</th>
+                <th style={{width: "20%"}}>Degree</th>
                 <th>School</th>
               </tr>
             </thead>
@@ -213,6 +218,8 @@ class Programs extends React.Component {
             </ModalFooter>
           </Form>
         </Modal>
+
+        <Pagination handlePageClick={this.handlePageClick} itemsPerPage={this.state.itemsPerPage} totalItems={this.state.totalItems} />
       </div>
     );
   }
