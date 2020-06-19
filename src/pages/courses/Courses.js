@@ -84,10 +84,10 @@ const CoursesView = ({ className }) => {
   return (
     <div>
       <h1 className="mb-lg">Courses</h1>
-      <button className={'student-btn btn btn-info'} onClick={handleButtonClick}>
+      <button className={'student-btn btn btn-info'} onClick={handleButtonClick} style={{marginBottom: "20px"}}>
         Create a new course
       </button>
-      <Table borderless className={'table'}>
+      <Table className={'table'}>
         <thead>
           <tr>
             <th>Course ID</th>

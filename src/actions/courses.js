@@ -13,7 +13,7 @@ export const coursesAction = {
     },
   }),
 
-  fetchAllCourses: ({ page = 1, school_id = 1 }) => {
+  fetchAllCourses: ({ page = 1, school_id = 0 }) => {
     return function (dispatch) {
       return coursesApi.getCourses({ page, school_id }).then(
         (res) => {
