@@ -16,12 +16,11 @@ import { schoolsApi } from '../../core/api/schools';
 import { coursesApi } from '../../core/api/courses';
 import { generalUtils } from '../../core/utils';
 import ReactPaginate from 'react-paginate';
-import ProgramHeader from './ProgramHeader';
 
 class Curriculum extends React.Component {
   constructor(props) {
-		super(props);
-		this.schoolInput = React.createRef();
+    super(props);
+    this.schoolInput = React.createRef();
     this.state = {
       courses: [],
       programId: null,
@@ -29,9 +28,9 @@ class Curriculum extends React.Component {
       page: 1,
       totalItems: 0,
       itemsPerPage: 20,
-			modalAddCourseOpen: false,
-			schools: [],
-			addedCourses: []
+      modalAddCourseOpen: false,
+      schools: [],
+      addedCourses: [],
     };
   }
 
@@ -81,9 +80,9 @@ class Curriculum extends React.Component {
       },
       (error) => {},
     );
-	};
-	
-	fetchSchools = () => {
+  };
+
+  fetchSchools = () => {
     schoolsApi.getSchools().then(
       (res) => {
         this.setState({
@@ -117,20 +116,19 @@ class Curriculum extends React.Component {
         generalUtils.showErrorNotification(error.message);
       },
     );
-	};
+  };
 
-	findCoursesByName = (e) => {
-		const courseName = e.target.value;
-		coursesApi.getCourses({name: courseName, school_id: this.schoolInput.current.value}).then(
-			(res) => {
-				this.setState({
-					addedCourses: res.data
-				})
-			}, (err) => {
-
-			}
-		)
-	}
+  findCoursesByName = (e) => {
+    const courseName = e.target.value;
+    coursesApi.getCourses({ name: courseName, school_id: this.schoolInput.current.value }).then(
+      (res) => {
+        this.setState({
+          addedCourses: res.data,
+        });
+      },
+      (err) => {},
+    );
+  };
 
   render() {
     const itemsPerPage = this.state.itemsPerPage;
@@ -159,11 +157,13 @@ class Curriculum extends React.Component {
                 <Input
                   type="select"
                   name="schoolId"
-									id="schoolInput"
-									onFocus={() => {this.fetchSchools()}}
-									innerRef={this.schoolInput}
+                  id="schoolInput"
+                  onFocus={() => {
+                    this.fetchSchools();
+                  }}
+                  innerRef={this.schoolInput}
                 >
-                  <option value="0" >Select school...</option>
+                  <option value="0">Select school...</option>
                   {this.state.schools.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.name}
@@ -177,9 +177,9 @@ class Curriculum extends React.Component {
                 <Input
                   type="select"
                   name="courseId"
-									id="courseInput"
-									onFocus={this.findCoursesByName}
-									required
+                  id="courseInput"
+                  onFocus={this.findCoursesByName}
+                  required
                 >
                   <option value="">Select course...</option>
                   {this.state.addedCourses.map((s) => (
@@ -189,7 +189,6 @@ class Curriculum extends React.Component {
                   ))}
                 </Input>
               </FormGroup>
-
             </ModalBody>
             <ModalFooter>
               <Button color="primary">Submit</Button>

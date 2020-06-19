@@ -5,8 +5,8 @@ export const REGISTER_LECTURER_SUCCESS = 'REGISTER_LECTURER_SUCCESS';
 export const REGISTER_STUDENT_SUCCESS = 'REGISTER_STUDENT_SUCCESS';
 
 export const accountAction = {
-  registerStudentAccount: ({ name, major }) => {
-    return accountApi.registerStudent({ name, major }).then(
+  registerStudentAccount: ({ name, program_id }) => {
+    return accountApi.registerStudent({ name, program_id }).then(
       (res) => {
         console.log('response', res);
         generalUtils.showSuccessNotification(res.message);

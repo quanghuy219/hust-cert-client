@@ -1,8 +1,8 @@
 import { httpRequest } from './httpRequest';
 
 export const accountApi = {
-  registerStudent: ({ name, major }) => {
-    const params = { name, major };
+  registerStudent: ({ name, program_id }) => {
+    const params = { name, program_id };
     return httpRequest.post(`/admin/students`, params);
   },
 

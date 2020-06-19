@@ -1,6 +1,6 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { accountAction } from '../../actions/account';
 import config from '../../core/configs';
 import styled from 'styled-components';
@@ -8,6 +8,7 @@ import { Role } from '../../constants/';
 import { useSelector } from 'react-redux';
 import { Modal, ModalHeader, ModalBody, Button, ModalFooter } from 'reactstrap';
 import { schoolsApi } from '../../core/api/schools';
+import { programApi } from '../../core/api/program';
 import { generalUtils } from '../../core/utils/general';
 import './style.css';
 
@@ -34,7 +35,7 @@ const renderModalContent = (data) => {
 
 const defaultInfo = {
   name: '',
-  major: '',
+  program_id: '',
   email: BASE_EMAIL,
   school: '',
   department: '',
@@ -47,6 +48,7 @@ const Register = () => {
   const [info, setInfo] = useState({ ...defaultInfo });
 
   const [schools, setSchools] = useState([]);
+  const [programs, setPrograms] = useState([]);
   const [departments, setDepartments] = useState([]);
 
   const [modal, setModal] = useState(false);
@@ -61,10 +63,6 @@ const Register = () => {
 
     if (typeof name !== 'undefined') {
       newInfo.name = name;
-    }
-
-    if (typeof major !== 'undefined') {
-      newInfo.major = major;
     }
 
     setInfo(newInfo);
@@ -179,14 +177,15 @@ const Register = () => {
   };
 
   const switchToStudent = () => {
+    fetchSchools();
     setType(Role.STUDENT);
     setInfo({ ...defaultInfo });
   };
 
   const switchToLecturer = () => {
+    fetchSchools();
     setType(Role.LECTURER);
     setInfo({ ...defaultInfo });
-    fetchSchools();
   };
 
   const switchToAdmin = () => {
@@ -200,6 +199,7 @@ const Register = () => {
   };
 
   const fetchSchools = () => {
+    console.log('fetchSchools');
     schoolsApi.getSchools().then(
       (res) => {
         setSchools(res);
@@ -223,6 +223,18 @@ const Register = () => {
     );
   };
 
+  const fetchPrograms = (school_id) => {
+    programApi.getPrograms(school_id).then(
+      (res) => {
+        setPrograms(res.data);
+      },
+      (error) => {
+        setPrograms([]);
+        generalUtils.showErrorNotification(error.message);
+      },
+    );
+  };
+
   const handleSelectSchool = (event) => {
     const school_id = parseInt(event.target.value) || '';
 
@@ -231,6 +243,7 @@ const Register = () => {
 
     if (school_id) {
       fetchDepartments(school_id);
+      fetchPrograms(school_id);
     }
 
     setInfo((info) => ({ ...info, school: school_id }));
@@ -240,6 +253,15 @@ const Register = () => {
     const department_id = parseInt(event.target.value) || '';
     setInfo((info) => ({ ...info, department: department_id }));
   };
+
+  const handleSelectProgram = (event) => {
+    const program_id = parseInt(event.target.value) || '';
+    setInfo((info) => ({ ...info, program_id }));
+  };
+
+  useEffect(() => {
+    fetchSchools();
+  }, []);
 
   const SwitchButtons = (
     <>
@@ -291,16 +313,32 @@ const Register = () => {
         />
       </div>
       <div className="form-group">
-        <label>Major</label>
-        <input
-          type="text"
+        <label>School</label>
+        <select value={info.school} onChange={handleSelectSchool} className="form-control" required>
+          <option value="">Choose...</option>
+          {schools.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label>Programs</label>
+        <select
+          value={info.program_id}
+          onChange={handleSelectProgram}
           className="form-control"
-          placeholder="Major"
-          name="major"
-          onChange={handleTextChange}
-          value={info.major || ''}
           required
-        />
+        >
+          <option value="">Choose...</option>
+          {programs.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );
