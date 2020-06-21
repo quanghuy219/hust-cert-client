@@ -3,7 +3,7 @@ import { Table, FormGroup, Label, Input } from 'reactstrap';
 import { programApi } from '../../core/api/program';
 import { generalUtils } from '../../core/utils';
 import Pagination from '../../components/Pagination';
-import './style.css'
+import './style.css';
 
 class Students extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class Students extends React.Component {
       totalItems: 0,
       itemsPerPage: 40,
       status: '',
-      graduateQualified: "",
+      graduateQualified: '',
     };
     this.handlePageClick = this.handlePageClick.bind(this);
   }
@@ -57,11 +57,11 @@ class Students extends React.Component {
   };
 
   fetchProgramStudents = () => {
-		const { page, itemsPerPage, status } = this.state;
-		let graduateQualified = "";
-		if (this.state.graduateQualified) {
-			graduateQualified = this.state.graduateQualified === 'true'
-		}
+    const { page, itemsPerPage, status } = this.state;
+    let graduateQualified = '';
+    if (this.state.graduateQualified) {
+      graduateQualified = this.state.graduateQualified === 'true';
+    }
 
     programApi
       .getStudents(this.state.programId, page, itemsPerPage, status, graduateQualified)
@@ -75,16 +75,18 @@ class Students extends React.Component {
         },
         (error) => {},
       );
-	};
-	
-	setStudentFilter = (e) => {
-		this.setState({
-			[e.target.name]: e.target.value
-		}, () => {
-			console.log(this.state)
-			this.fetchProgramStudents()
-		})
-	}
+  };
+
+  setStudentFilter = (e) => {
+    this.setState(
+      {
+        [e.target.name]: e.target.value,
+      },
+      () => {
+        this.fetchProgramStudents();
+      },
+    );
+  };
 
   render() {
     return (
@@ -99,9 +101,15 @@ class Students extends React.Component {
             </Input>
           </FormGroup>
 
-					<FormGroup className="filter-input">
+          <FormGroup className="filter-input">
             <Label for="studentGraduationStatus">Qualify for graduate</Label>
-            <Input type="select" name="graduateQualified" id="studentGraduationStatus" defaultValue={null} onChange={this.setStudentFilter}>
+            <Input
+              type="select"
+              name="graduateQualified"
+              id="studentGraduationStatus"
+              defaultValue={null}
+              onChange={this.setStudentFilter}
+            >
               <option value="">All</option>
               <option value={true}>Yes</option>
               <option value={false}>No</option>
@@ -130,7 +138,11 @@ class Students extends React.Component {
               ))}
             </tbody>
           </Table>
-          <Pagination handlePageClick={this.handlePageClick} itemsPerPage={this.state.itemsPerPage} totalItems={this.state.totalItems} />
+          <Pagination
+            handlePageClick={this.handlePageClick}
+            itemsPerPage={this.state.itemsPerPage}
+            totalItems={this.state.totalItems}
+          />
         </div>
       </div>
     );
