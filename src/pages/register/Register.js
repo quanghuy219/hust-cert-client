@@ -432,7 +432,7 @@ const Register = () => {
   return (
     <View>
       <Breadcrumb>
-        <BreadcrumbItem>YOU ARE HERE</BreadcrumbItem>
+        <BreadcrumbItem>Home</BreadcrumbItem>
         <BreadcrumbItem active>Register</BreadcrumbItem>
       </Breadcrumb>
       <h1 className="page-title mb-lg">Register</h1>

@@ -19,12 +19,14 @@ const ProgramView = (props) => {
   const { programID } = props.match.params;
   const fullUrl = props.location.pathname;
   const currentPage = fullUrl.replace(url, '').split`/`.join``; // split & join is a fallback for replaceAll
-  const [currentProgramInfo, setCurrentProgramInfo] = useState('');
+  const [currentProgramName, setCurrentProgramName] = useState('');
+  const [currentProgram, setCurrentProgram] = useState({});
 
   useEffect(() => {
     programApi.getProgramById(programID).then(
       (res) => {
-        setCurrentProgramInfo(res.school.name + ' / ' + res.name);
+        setCurrentProgramName(res.school.name + ' / ' + res.name);
+        setCurrentProgram(res);
       },
       (error) => {
         generalUtils.showErrorNotification(error.message);
@@ -35,8 +37,8 @@ const ProgramView = (props) => {
   return (
     <div className={props.className}>
       <Breadcrumb>
-        <BreadcrumbItem>YOU ARE HERE</BreadcrumbItem>
-        <BreadcrumbItem active>{currentProgramInfo}</BreadcrumbItem>
+        <BreadcrumbItem>Home</BreadcrumbItem>
+        <BreadcrumbItem active>{currentProgramName}</BreadcrumbItem>
       </Breadcrumb>
 
       <div className="nav-container">
@@ -51,6 +53,12 @@ const ProgramView = (props) => {
           </li>
         </Nav>
       </div>
+
+      <div className="program-info">
+        <p>Name: {currentProgram?.name}</p>
+        <p>Degree: {currentProgram?.degree}</p>
+      </div>
+
       <div className="main-content">
         <Switch>
           <Route path={`${path}`} exact component={Curriculum} />
@@ -91,5 +99,9 @@ export const Program = styled(ProgramView)`
 
   .main-content {
     margin-top: 30px;
+  }
+
+  .program-info {
+    margin-top: 20px;
   }
 `;

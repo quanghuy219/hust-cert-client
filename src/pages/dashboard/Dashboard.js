@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
-import { Table } from 'reactstrap';
+import { Table, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import s from './Dashboard.module.scss';
 
@@ -128,7 +128,7 @@ class Dashboard extends Component {
   };
 
   handleSemesterInputChange = (event) => {
-    this.state({ semester: event.target.value });
+    this.setState({ semester: event.target.value });
   };
 
   handleSubmission = (event) => {
@@ -150,13 +150,16 @@ class Dashboard extends Component {
     const pageCount = Math.ceil(this.props.totalItems / this.props.itemsPerPage);
     return (
       <div className={s.root}>
-        <h1 className="mb-lg">Dashboard</h1>
-        <div>
+        <Breadcrumb>
+        <BreadcrumbItem>Home</BreadcrumbItem>
+        <BreadcrumbItem active>Classes</BreadcrumbItem>
+      </Breadcrumb>
+        <div style={{marginBottom: "20px"}}>
           <button className={`btn btn-info`} onClick={this.toggleModalOpen}>
-            New class
+            Add class
           </button>
         </div>
-        <Table borderless className={s.mainTable}>
+        <Table className={s.mainTable}>
           <thead>
             <tr>
               <th className="hidden-sm-down">Semester</th>
