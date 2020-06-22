@@ -55,8 +55,8 @@ const ProgramView = (props) => {
       </div>
 
       <div className="program-info">
-        <p>Name: {currentProgram?.name}</p>
-        <p>Degree: {currentProgram?.degree}</p>
+        <p>Name: {currentProgram.name || ''}</p>
+        <p>Degree: {currentProgram.degree || ''}</p>
       </div>
 
       <div className="main-content">
