@@ -11,6 +11,8 @@ import {
   ModalBody,
   ModalFooter,
   Form,
+  Breadcrumb,
+  BreadcrumbItem
 } from 'reactstrap';
 import { programApi } from '../../core/api/program';
 import { schoolsApi } from '../../core/api/schools';
@@ -111,7 +113,10 @@ class Programs extends React.Component {
   render() {
     return (
       <div>
-        <h3>Training Programs</h3>
+        <Breadcrumb>
+        <BreadcrumbItem>Home</BreadcrumbItem>
+        <BreadcrumbItem active>Training Programs</BreadcrumbItem>
+      </Breadcrumb>
 
         <div className="programs-header" style={{ width: '350px' }}>
           <FormGroup>
