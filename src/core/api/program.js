@@ -46,4 +46,12 @@ export const programApi = {
 
     return httpRequest.get(`/programs/${programId}/students`, params);
   },
+
+  createDiplomaTemplate: (programId) => {
+    return httpRequest.post(`/programs/${programId}/diplomas`);
+  },
+
+  issueDiploma: (programId) => {
+    return httpRequest.put(`/programs/${programId}/diplomas`);
+  }
 };

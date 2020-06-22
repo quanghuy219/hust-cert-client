@@ -25,7 +25,7 @@ class Certificate extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.openModal && !this.state.certificate) {
+    if (this.props.openModal && this.props.certificateID && !this.state.certificate) {
       this.openCertificateVerificationModal(this.props.certificateID, this.props.type)
     }
   }
@@ -46,11 +46,11 @@ class Certificate extends React.Component {
         <Modal
           isOpen={this.props.openModal}
           toggle={this.props.toggle}
-          size="lg"
+          size="xl"
           className="certificate-modal"
         >
           <ModalBody>
-            {this.state.certificate && this.props.type === 'certificate' && (
+            {this.props.certificateID && this.state.certificate && this.props.type === 'certificate' && (
               <Blockcerts src={this.state.certificate} />
             )}
             {this.state.certificate && this.props.type === 'template' && (

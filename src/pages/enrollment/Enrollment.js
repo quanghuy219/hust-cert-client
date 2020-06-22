@@ -20,7 +20,7 @@ class Enrollment extends React.Component {
       class: {
         enrollments: [],
       },
-      modalOpen: false,
+      openModal: false,
       displayedCertificateID: null,
       displayedCertificateType: '',
       modalEnrollStudentOpen: false,

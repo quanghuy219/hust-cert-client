@@ -7,14 +7,13 @@ import { certificateAction } from '../../actions/certificate';
 import Certificate from '../certificate';
 import VerificationInfoModal from './VerificationInfoModal';
 
-
 class Transcript extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       openModal: false,
       displayedCertificateID: null,
-      displayedCertificateType: "",
+      displayedCertificateType: '',
       selectVerificationRequest: false,
       verificationRequest: {
         enrollments: new Set(),
@@ -23,7 +22,7 @@ class Transcript extends React.Component {
         duration: '',
       },
       verificationModalOpen: false,
-      verificationInfo: {}
+      verificationInfo: {},
     };
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
     this.downloadCertificate = this.downloadCertificate.bind(this);
@@ -57,24 +56,26 @@ class Transcript extends React.Component {
       displayedCertificateID: certID,
       displayedCertificateType: type,
     });
-}
+  }
 
   submitVerificationRequest(e) {
     e.preventDefault();
     let { verifier, enrollments, degrees, duration } = this.state.verificationRequest;
     enrollments = [...enrollments];
     degrees = [...degrees];
-    studentAction.createVerificationRequest(verifier, enrollments, degrees, duration).then((res) => {
-      this.setState({
-        selectVerificationRequest: false,
-        verificationModalOpen: true,
-        verificationInfo: {
-          expirationTime: res.expiration_time,
-          shareCode: res.share_code,
-          verifier: res.verifier
-        }
+    studentAction
+      .createVerificationRequest(verifier, enrollments, degrees, duration)
+      .then((res) => {
+        this.setState({
+          selectVerificationRequest: false,
+          verificationModalOpen: true,
+          verificationInfo: {
+            expirationTime: res.expiration_time,
+            shareCode: res.share_code,
+            verifier: res.verifier,
+          },
+        });
       });
-    });
   }
 
   downloadCertificate(certID) {
@@ -119,8 +120,8 @@ class Transcript extends React.Component {
 
   toggleVerificationInfoModal() {
     this.setState({
-      verificationModalOpen: !this.state.verificationModalOpen
-    })
+      verificationModalOpen: !this.state.verificationModalOpen,
+    });
   }
 
   render() {
@@ -134,10 +135,13 @@ class Transcript extends React.Component {
         <div style={{ marginBottom: '20px' }}>
           {!this.state.selectVerificationRequest ? (
             <React.Fragment>
-            <Button color="info" onClick={() => this.setState({ selectVerificationRequest: true })}>
-              Public your transcript
-            </Button>
-            <br/>
+              <Button
+                color="info"
+                onClick={() => this.setState({ selectVerificationRequest: true })}
+              >
+                Public your transcript
+              </Button>
+              <br />
             </React.Fragment>
           ) : (
             <div style={{ width: '300px' }}>
@@ -243,7 +247,7 @@ class Transcript extends React.Component {
           type={this.state.displayedCertificateType}
         />
 
-        <VerificationInfoModal 
+        <VerificationInfoModal
           openModal={this.state.verificationModalOpen}
           toggleModal={this.toggleVerificationInfoModal}
           verification={this.state.verificationInfo}
