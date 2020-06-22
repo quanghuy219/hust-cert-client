@@ -1,13 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link as LinkView } from 'react-router-dom';
+import styled from 'styled-components';
 
-import Icon from '../Icon';
 import LinksGroup from './LinksGroup/LinksGroup';
 
 import s from './Sidebar.module.scss';
 import { Role } from '../../constants';
+import { HustIcon } from './HustIcon';
 
+const Link = styled(LinkView)`
+  width: 100%;
+  height: 100%;
+`;
 class Sidebar extends React.Component {
   renderSidebarItemByRole() {
     const adminItems = (
@@ -61,7 +66,7 @@ class Sidebar extends React.Component {
       <nav className={s.root}>
         <header className={s.logo}>
           <Link to="/home">
-            <Icon glyph="logo" />
+            <HustIcon />
           </Link>
         </header>
         <ul className={s.nav}>{this.renderSidebarItemByRole()}</ul>
