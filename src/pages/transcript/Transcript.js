@@ -12,9 +12,9 @@ class Transcript extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: false,
-      certificate: {},
-      certificateType: '',
+      openModal: false,
+      displayedCertificateID: null,
+      displayedCertificateType: "",
       selectVerificationRequest: false,
       verificationRequest: {
         enrollments: new Set(),
@@ -26,7 +26,6 @@ class Transcript extends React.Component {
       verificationInfo: {}
     };
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
-    this.openCertificateVerificationModal = this.openCertificateVerificationModal.bind(this);
     this.downloadCertificate = this.downloadCertificate.bind(this);
     this.submitVerificationRequest = this.submitVerificationRequest.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
@@ -45,22 +44,20 @@ class Transcript extends React.Component {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-        newState.certificate = {};
-        newState.certificateType = '';
+        newState.displayedCertificateID = null;
+        newState.displayedCertificateType = '';
       }
       return newState;
     });
   }
 
-  openCertificateVerificationModal(certID, type = 'certificate') {
-    certificateAction.getCertificateContent(certID, type).then((data) => {
-      this.setState({
-        openModal: true,
-        certificate: JSON.parse(data),
-        certificateType: type,
-      });
+  openCertificateVerificationModal(certID, type) {
+    this.setState({
+      openModal: true,
+      displayedCertificateID: certID,
+      displayedCertificateType: type,
     });
-  }
+}
 
   submitVerificationRequest(e) {
     e.preventDefault();
@@ -242,8 +239,8 @@ class Transcript extends React.Component {
         <Certificate
           openModal={this.state.openModal}
           toggle={this.toggleCertificateVerificationModal}
-          certificate={this.state.certificate}
-          type={this.state.certificateType}
+          certificateID={this.state.displayedCertificateID}
+          type={this.state.displayedCertificateType}
         />
 
         <VerificationInfoModal 
