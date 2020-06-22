@@ -166,6 +166,11 @@ const Register = () => {
         data.department = res.department.name;
       }
 
+      if (res?.program) {
+        data.program = res.program.name;
+        data.school = res.program.school;
+      }
+
       setModalContent(renderModalContent(data));
       toggleModal();
     });
@@ -456,6 +461,7 @@ const Register = () => {
           toggle={toggleModal}
           backdrop={true}
           keyboard={true}
+          size="lg"
         >
           <ModalHeader toggle={toggleModal}>Register successfully</ModalHeader>
           <ModalBody>
