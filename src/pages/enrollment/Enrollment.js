@@ -5,7 +5,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { classAction } from '../../actions/class';
 import { classApi } from '../../core/api';
-import { certificateAction } from '../../actions/certificate';
 import { generalUtils } from '../../core/utils/general';
 import { Role } from '../../constants';
 import Certificate from '../certificate';
@@ -21,9 +20,9 @@ class Enrollment extends React.Component {
       class: {
         enrollments: [],
       },
-      modalOpen: false,
-      certificate: null,
-      certificateType: '',
+      openModal: false,
+      displayedCertificateID: null,
+      displayedCertificateType: '',
       modalEnrollStudentOpen: false,
       studentID: null,
     };
@@ -33,7 +32,6 @@ class Enrollment extends React.Component {
     this.createCertificateTemplate = this.createCertificateTemplate.bind(this);
     this.issueCertificates = this.issueCertificates.bind(this);
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
-    this.openCertificateVerificationModal = this.openCertificateVerificationModal.bind(this);
     this.enrollStudent = this.enrollStudent.bind(this);
     this.toggleModalEnrollStudentOpen = this.toggleModalEnrollStudentOpen.bind(this);
     this.onStudentIDInputChange = this.onStudentIDInputChange.bind(this);
@@ -100,21 +98,19 @@ class Enrollment extends React.Component {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-        newState.certificate = null;
-        newState.certificateType = '';
+        newState.displayedCertificateID = null;
+        newState.displayedCertificateType = '';
       }
       return newState;
     });
   }
 
   openCertificateVerificationModal(certID, type) {
-    certificateAction.getCertificateContent(certID, type).then((data) => {
       this.setState({
         openModal: true,
-        certificate: JSON.parse(data),
-        certificateType: type,
+        displayedCertificateID: certID,
+        displayedCertificateType: type,
       });
-    });
   }
 
   enrollStudent() {
@@ -298,9 +294,7 @@ class Enrollment extends React.Component {
                   {row.certificate && row.certificate.template_url && (
                     <Button
                       color="info"
-                      onClick={() =>
-                        this.openCertificateVerificationModal(row.certificate.id, 'template')
-                      }
+                      onClick={() => this.openCertificateVerificationModal(row.certificate.id, 'template')}
                     >
                       Display
                     </Button>
@@ -310,9 +304,7 @@ class Enrollment extends React.Component {
                   {row.certificate && row.certificate.url && (
                     <Button
                       color="info"
-                      onClick={() =>
-                        this.openCertificateVerificationModal(row.certificate.id, 'certificate')
-                      }
+                      onClick={() => this.openCertificateVerificationModal(row.certificate.id, 'certificate')}
                     >
                       Verify
                     </Button>
@@ -327,8 +319,8 @@ class Enrollment extends React.Component {
         <Certificate
           openModal={this.state.openModal}
           toggle={this.toggleCertificateVerificationModal}
-          certificate={this.state.certificate}
-          type={this.state.certificateType}
+          certificateID={this.state.displayedCertificateID}
+          type={this.state.displayedCertificateType}
         />
 
         <Modal

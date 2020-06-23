@@ -1,6 +1,10 @@
 import { httpRequest } from './httpRequest';
 
 export const studentApi = {
+  getStudentInfo: () => {
+    return httpRequest.get(`/students/me`);
+  },
+
   getEnrollments: () => {
     return httpRequest.get('/students/me/enrollments');
   },
@@ -13,8 +17,8 @@ export const studentApi = {
     const params = {
       verifier,
       enrollments,
-      degrees,
-      duration
+      duration,
+      diplomas: degrees
     };
     return httpRequest.post('/students/me/verifications', params);
   },

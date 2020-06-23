@@ -1,8 +1,12 @@
 import React from 'react';
-import { Table, FormGroup, Label, Input } from 'reactstrap';
+import { connect } from 'react-redux';
+import { Table, FormGroup, Label, Input, Button } from 'reactstrap';
 import { programApi } from '../../core/api/program';
 import { generalUtils } from '../../core/utils';
+import { programAction } from '../../actions/program';
 import Pagination from '../../components/Pagination';
+import Certificate from '../certificate';
+import { Role } from '../../constants';
 import './style.css';
 
 class Students extends React.Component {
@@ -18,8 +22,12 @@ class Students extends React.Component {
       itemsPerPage: 40,
       status: '',
       graduateQualified: '',
+      openModal: false,
+      displayedCertificateID: null,
+      displayedCertificateType: '',
     };
     this.handlePageClick = this.handlePageClick.bind(this);
+    this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
   }
 
   componentDidMount() {
@@ -88,9 +96,58 @@ class Students extends React.Component {
     );
   };
 
+  toggleCertificateVerificationModal() {
+    this.setState((prevState) => {
+      let newState = {
+        openModal: !prevState.openModal,
+      };
+      if (prevState.openModal) {
+        newState.displayedCertificateID = null;
+        newState.displayedCertificateType = '';
+      }
+      return newState;
+    });
+  }
+
+  openCertificateVerificationModal(certID, type) {
+    this.setState({
+      openModal: true,
+      displayedCertificateID: certID,
+      displayedCertificateType: type,
+    });
+  }
+
+  createDiplomaTemplate = async () => {
+    this.props.createDiplomaTemplates(this.state.programId).then((data) => {
+      this.fetchProgramStudents();
+    });
+  };
+
+  issueDiploma = () => {
+    this.props.issueDiploma(this.state.programId).then((data) => {
+      this.fetchProgramStudents();
+    });
+  };
+
   render() {
     return (
       <div>
+        <div>
+          <Button
+            className="create-diploma-buttons"
+            color="info"
+            onClick={this.createDiplomaTemplate}
+          >
+            Create Diploma Template
+          </Button>
+
+          {this.props.auth.role === Role.SUPER_ADMIN && (
+            <Button className="create-diploma-buttons" color="info" onClick={this.issueDiploma}>
+              Issue Diploma
+            </Button>
+          )}
+        </div>
+
         <div className="d-flex justify-content-center filter-students">
           <FormGroup className="filter-input">
             <Label for="studentStatus">Status</Label>
@@ -125,6 +182,8 @@ class Students extends React.Component {
                 <th>Name</th>
                 <th>Status</th>
                 <th>Qualify for graduate</th>
+                <th>Diploma template</th>
+                <th>Digital diploma</th>
               </tr>
             </thead>
             <tbody>
@@ -134,10 +193,48 @@ class Students extends React.Component {
                   <td>{student.name}</td>
                   <td>{student.status}</td>
                   <td>{student.graduate_qualified ? 'Yes' : 'No'}</td>
+                  <td>
+                    {student?.diploma?.certificate && student?.diploma?.certificate.template_url && (
+                      <Button
+                        color="info"
+                        onClick={() =>
+                          this.openCertificateVerificationModal(
+                            student.diploma.certificate.id,
+                            'template',
+                          )
+                        }
+                      >
+                        Display
+                      </Button>
+                    )}
+                  </td>
+                  <td>
+                    {student?.diploma?.certificate && student?.diploma?.certificate.url && (
+                      <Button
+                        color="info"
+                        onClick={() =>
+                          this.openCertificateVerificationModal(
+                            student.diploma.certificate.id,
+                            'certificate',
+                          )
+                        }
+                      >
+                        Verify
+                      </Button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </Table>
+
+          <Certificate
+            openModal={this.state.openModal}
+            toggle={this.toggleCertificateVerificationModal}
+            certificateID={this.state.displayedCertificateID}
+            type={this.state.displayedCertificateType}
+          />
+
           <Pagination
             handlePageClick={this.handlePageClick}
             itemsPerPage={this.state.itemsPerPage}
@@ -149,4 +246,15 @@ class Students extends React.Component {
   }
 }
 
-export default Students;
+function mapStateToProps(state) {
+  return {
+    auth: state.auth,
+  };
+}
+
+const mapDispatchToProps = {
+  createDiplomaTemplates: programAction.createDiplomaTemplates,
+  issueDiploma: programAction.issueDiploma,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Students);

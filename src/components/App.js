@@ -51,7 +51,7 @@ class App extends React.PureComponent {
               isAuthenticated={this.props.isAuthenticated}
               role={this.props.role}
             />
-            
+            <Route path="/login" exact component={Login} />
             <Route
               path="/verification/:shareCode"
               exact

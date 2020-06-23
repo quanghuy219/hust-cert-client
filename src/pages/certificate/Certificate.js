@@ -1,25 +1,60 @@
 import React from 'react';
 import Blockcerts from 'react-blockcerts';
 import { Modal, ModalBody, Button, ModalFooter } from 'reactstrap';
+import { certificateAction } from '../../actions/certificate';
 import PropTypes from 'prop-types';
 import './style.css';
 
-class Certificate extends React.PureComponent {
+class Certificate extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openModal: false,
+      certificate: null
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.openModal) {
+      return {
+        certificateID: props.certificateID,
+        certificateType: props.certificateType
+      }
+    }
+    return null;
+  }
+
+  componentDidUpdate() {
+    if (this.props.openModal && this.props.certificateID && !this.state.certificate) {
+      this.openCertificateVerificationModal(this.props.certificateID, this.props.type)
+    }
+  }
+
+  openCertificateVerificationModal(certID, type) {
+    certificateAction.getCertificateContent(certID, type).then((data) => {
+      this.setState({
+        openModal: true,
+        certificate: JSON.parse(data),
+        certificateType: type,
+      });
+    });
+  }
+
   render() {
     return (
       <div>
         <Modal
           isOpen={this.props.openModal}
           toggle={this.props.toggle}
-          size="lg"
+          size="xl"
           className="certificate-modal"
         >
           <ModalBody>
-            {this.props.certificate && this.props.type === 'certificate' && (
-              <Blockcerts src={this.props.certificate} />
+            {this.props.certificateID && this.state.certificate && this.props.type === 'certificate' && (
+              <Blockcerts src={this.state.certificate} />
             )}
-            {this.props.certificate && this.props.type === 'template' && (
-              <div dangerouslySetInnerHTML={{ __html: this.props.certificate.displayHtml }}></div>
+            {this.state.certificate && this.props.type === 'template' && (
+              <div dangerouslySetInnerHTML={{ __html: this.state.certificate.displayHtml }}></div>
             )}
           </ModalBody>
           <ModalFooter>
@@ -34,7 +69,7 @@ class Certificate extends React.PureComponent {
 }
 
 Certificate.propTypes = {
-  certificate: PropTypes.object,
+  certificateID: PropTypes.number,
   toggle: PropTypes.func.isRequired,
 };
 Certificate.defaultProps = {

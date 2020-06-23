@@ -7,7 +7,6 @@ import { Table, Button } from 'reactstrap';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-
 const override = css`
   display: block;
   margin: 0 auto;
@@ -20,11 +19,11 @@ class Verification extends React.Component {
     this.state = {
       renderPage: false,
       openModal: false,
-      certificate: {},
+      displayedCertificateID: null,
       student: {},
       access_token: '',
       enrollments: [],
-      degrees: [],
+      diplomas: [],
     };
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
   }
@@ -37,7 +36,7 @@ class Verification extends React.Component {
         student: res.student,
         access_token: res.access_token,
         enrollments: res.enrollments || [],
-        degrees: res.degrees || [],
+        diplomas: res.diplomas || [],
         renderPage: true,
       });
     });
@@ -51,7 +50,7 @@ class Verification extends React.Component {
     certificateAction.getCertificateContent(certID, type).then((data) => {
       this.setState({
         openModal: true,
-        certificate: JSON.parse(data),
+        displayedCertificateID: certID,
       });
     });
   }
@@ -62,7 +61,7 @@ class Verification extends React.Component {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-        newState.certificate = {};
+        newState.displayedCertificateID = null;
       }
       return newState;
     });
@@ -76,59 +75,94 @@ class Verification extends React.Component {
         </div>
       );
     }
-    
+
     return (
       <div>
         <h1>Student Information</h1>
         <p> Student ID: {this.state.student.id} </p>
         <p> Name: {this.state.student.name} </p>
         <p> Email: {this.state.student.email} </p>
+        <p> Program: {this.state.student.program.name} </p>
+        <p>School: {this.state.student.program.school.name}</p>
 
-        <h2 className="mb-lg">Transcript</h2>
-        <Table>
-          <thead>
-            <tr>
-              <th>Semester</th>
-              <th>Course ID</th>
-              <th>Course Name</th>
-              <th>Midterm</th>
-              <th>Final</th>
-              <th className="hidden-sm-down">Grade</th>
-              <th>Digital Certificate</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.enrollments.map((row, index) => (
-              <tr key={index}>
-                <td>{row.semester}</td>
-                <td>{row.course.id}</td>
-                <td>{row.course.name}</td>
-                <td>{row.midterm}</td>
-                <td>{row.final}</td>
-                <td>{row.grade}</td>
-                <td>
-                  {row.certificate_id && (
-                    <span>
-                      <Button
-                        style={{ marginRight: '20px' }}
-                        color="info"
-                        onClick={() => this.openCertificateVerificationModal(row.certificate_id)}
-                      >
-                        Display
-                      </Button>
-                    </span>
-                  )}
-                </td>
+        <div>
+          <h3 className="mb-lg">Transcript</h3>
+          <Table>
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th className="hidden-sm-down">Grade</th>
+                <th>Digital Certificate</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {this.state.enrollments.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.semester}</td>
+                  <td>{row.course.id}</td>
+                  <td>{row.course.name}</td>
+                  <td>{row.grade}</td>
+                  <td style={{width: "20%"}}>
+                    {row.certificate_id && (
+                      <span>
+                        <Button
+                          style={{ marginRight: '20px' }}
+                          color="info"
+                          onClick={() => this.openCertificateVerificationModal(row.certificate_id)}
+                        >
+                          Display
+                        </Button>
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+
+        <div>
+          <h5>Diploma</h5>
+          <Table>
+            <thead>
+              <tr>
+                <th>Graduation year</th>
+                <th>Degree</th>
+                <th>Diploma</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.diplomas.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.graduation_year}</td>
+                  <td>{row.degree}</td>
+                  <td style={{width: "20%"}}>
+                    {row.certificate_id && (
+                      <span>
+                        <Button
+                          style={{ marginRight: '20px' }}
+                          color="info"
+                          onClick={() => this.openCertificateVerificationModal(row.certificate_id)}
+                        >
+                          Display
+                        </Button>
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
 
         <Certificate
           openModal={this.state.openModal}
           toggle={this.toggleCertificateVerificationModal}
-          certificate={this.state.certificate}
+          certificateID={this.state.displayedCertificateID}
           type="certificate"
         />
       </div>

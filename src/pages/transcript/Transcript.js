@@ -4,29 +4,29 @@ import { Table, Button, Input, Form } from 'reactstrap';
 
 import { studentAction } from '../../actions/student';
 import { certificateAction } from '../../actions/certificate';
+import { studentApi } from '../../core/api/student';
 import Certificate from '../certificate';
 import VerificationInfoModal from './VerificationInfoModal';
-
 
 class Transcript extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: false,
-      certificate: {},
-      certificateType: '',
+      openModal: false,
+      displayedCertificateID: null,
+      displayedCertificateType: '',
       selectVerificationRequest: false,
       verificationRequest: {
         enrollments: new Set(),
-        degrees: new Set(),
+        diplomas: new Set(),
         verifier: '',
         duration: '',
       },
       verificationModalOpen: false,
-      verificationInfo: {}
+      verificationInfo: {},
+      student: {},
     };
     this.toggleCertificateVerificationModal = this.toggleCertificateVerificationModal.bind(this);
-    this.openCertificateVerificationModal = this.openCertificateVerificationModal.bind(this);
     this.downloadCertificate = this.downloadCertificate.bind(this);
     this.submitVerificationRequest = this.submitVerificationRequest.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
@@ -36,7 +36,16 @@ class Transcript extends React.Component {
   }
 
   componentDidMount() {
+    this.fetchStudentData();
     this.props.fetchStudentEnrollments();
+  }
+
+  fetchStudentData() {
+    studentApi.getStudentInfo().then((res) => {
+      this.setState({
+        student: res,
+      });
+    });
   }
 
   toggleCertificateVerificationModal() {
@@ -45,39 +54,39 @@ class Transcript extends React.Component {
         openModal: !prevState.openModal,
       };
       if (prevState.openModal) {
-        newState.certificate = {};
-        newState.certificateType = '';
+        newState.displayedCertificateID = null;
+        newState.displayedCertificateType = '';
       }
       return newState;
     });
   }
 
-  openCertificateVerificationModal(certID, type = 'certificate') {
-    certificateAction.getCertificateContent(certID, type).then((data) => {
-      this.setState({
-        openModal: true,
-        certificate: JSON.parse(data),
-        certificateType: type,
-      });
+  openCertificateVerificationModal(certID, type) {
+    this.setState({
+      openModal: true,
+      displayedCertificateID: certID,
+      displayedCertificateType: type,
     });
   }
 
   submitVerificationRequest(e) {
     e.preventDefault();
-    let { verifier, enrollments, degrees, duration } = this.state.verificationRequest;
+    let { verifier, enrollments, diplomas, duration } = this.state.verificationRequest;
     enrollments = [...enrollments];
-    degrees = [...degrees];
-    studentAction.createVerificationRequest(verifier, enrollments, degrees, duration).then((res) => {
-      this.setState({
-        selectVerificationRequest: false,
-        verificationModalOpen: true,
-        verificationInfo: {
-          expirationTime: res.expiration_time,
-          shareCode: res.share_code,
-          verifier: res.verifier
-        }
+    diplomas = [...diplomas];
+    studentAction
+      .createVerificationRequest(verifier, enrollments, diplomas, duration)
+      .then((res) => {
+        this.setState({
+          selectVerificationRequest: false,
+          verificationModalOpen: true,
+          verificationInfo: {
+            expirationTime: res.expiration_time,
+            shareCode: res.share_code,
+            verifier: res.verifier,
+          },
+        });
       });
-    });
   }
 
   downloadCertificate(certID) {
@@ -85,20 +94,23 @@ class Transcript extends React.Component {
   }
 
   handleCheckbox(e, id, type) {
-    let { verificationRequest } = this.state;
+    let verificationRequest = {};
+    Object.assign(verificationRequest, this.state.verificationRequest);
+
     if (e.target.checked) {
       if (type === 'enrollment') {
         verificationRequest.enrollments.add(id);
       } else {
-        verificationRequest.degrees.add(id);
+        verificationRequest.diplomas.add(id);
       }
     } else {
       if (type === 'enrollment') {
         verificationRequest.enrollments.delete(id);
       } else {
-        verificationRequest.degrees.delete(id);
+        verificationRequest.diplomas.delete(id);
       }
     }
+
     this.setState({
       verificationRequest: verificationRequest,
     });
@@ -122,25 +134,28 @@ class Transcript extends React.Component {
 
   toggleVerificationInfoModal() {
     this.setState({
-      verificationModalOpen: !this.state.verificationModalOpen
-    })
+      verificationModalOpen: !this.state.verificationModalOpen,
+    });
   }
 
   render() {
     return (
       <div>
         <h1>Student Information</h1>
-        <p> Student ID: {this.props.auth.id} </p>
-        <p> Name: {this.props.auth.name} </p>
-        <p> Email: {this.props.auth.email} </p>
+        <p> Student ID: {this.state.student.id} </p>
+        <p> Name: {this.state.student.name} </p>
+        <p> Email: {this.state.student.email} </p>
 
         <div style={{ marginBottom: '20px' }}>
           {!this.state.selectVerificationRequest ? (
             <React.Fragment>
-            <Button color="info" onClick={() => this.setState({ selectVerificationRequest: true })}>
-              Public your transcript
-            </Button>
-            <br/>
+              <Button
+                color="info"
+                onClick={() => this.setState({ selectVerificationRequest: true })}
+              >
+                Public your transcript
+              </Button>
+              <br />
             </React.Fragment>
           ) : (
             <div style={{ width: '300px' }}>
@@ -178,75 +193,139 @@ class Transcript extends React.Component {
             </div>
           )}
         </div>
-        <h2 className="mb-lg">Transcript</h2>
-        <Table>
-          <thead>
-            <tr>
-              {this.state.selectVerificationRequest && <th></th>}
-              <th>Semester</th>
-              <th>Course ID</th>
-              <th>Course Name</th>
-              <th>Midterm</th>
-              <th>Final</th>
-              <th className="hidden-sm-down">Grade</th>
-              <th>Digital Certificate</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.enrollments.map((row) => (
-              <tr key={row.id}>
-                {this.state.selectVerificationRequest && (
-                  <td>
-                    <Input
-                      type="checkbox"
-                      name="check"
-                      onChange={(e) => this.handleCheckbox(e, row.id, 'enrollment')}
-                    />
-                  </td>
-                )}
-                <td>{row.semester}</td>
-                <td>{row.course.id}</td>
-                <td>{row.course.name}</td>
-                <td>{row.midterm}</td>
-                <td>{row.final}</td>
-                <td>{row.grade}</td>
-                <td>
-                  {row.certificate && row.certificate.url && (
-                    <span>
-                      <Button
-                        color="danger"
-                        style={{ marginRight: '20px' }}
-                        onClick={() => this.downloadCertificate(row.certificate.id)}
-                      >
-                        Download
-                      </Button>
-
-                      <Button
-                        style={{ marginRight: '20px' }}
-                        color="info"
-                        onClick={() =>
-                          this.openCertificateVerificationModal(row.certificate.id, 'certificate')
-                        }
-                      >
-                        Verify
-                      </Button>
-                    </span>
-                  )}
-                </td>
+        <div className="transcript-table">
+          <h3 className="mb">Transcript</h3>
+          <Table>
+            <thead>
+              <tr>
+                {this.state.selectVerificationRequest && <th></th>}
+                <th>Semester</th>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Midterm</th>
+                <th>Final</th>
+                <th className="hidden-sm-down">Grade</th>
+                <th>Digital Certificate</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {this.props.enrollments.map((row) => (
+                <tr key={row.id}>
+                  {this.state.selectVerificationRequest && (
+                    <td>
+                      <Input
+                        type="checkbox"
+                        name="check"
+                        onChange={(e) => this.handleCheckbox(e, row.id, 'enrollment')}
+                      />
+                    </td>
+                  )}
+                  <td>{row.semester}</td>
+                  <td>{row.course.id}</td>
+                  <td>{row.course.name}</td>
+                  <td>{row.midterm}</td>
+                  <td>{row.final}</td>
+                  <td>{row.grade}</td>
+                  <td>
+                    {row.certificate && row.certificate.url && (
+                      <span>
+                        <Button
+                          color="danger"
+                          style={{ marginRight: '20px' }}
+                          onClick={() => this.downloadCertificate(row.certificate.id)}
+                        >
+                          Download
+                        </Button>
 
+                        <Button
+                          style={{ marginRight: '20px' }}
+                          color="info"
+                          onClick={() =>
+                            this.openCertificateVerificationModal(row.certificate.id, 'certificate')
+                          }
+                        >
+                          Verify
+                        </Button>
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+        {this.state.student.diploma && this.state.student.status === 'graduated' && (
+          <div className="transcript-table">
+            <h3>Diploma</h3>
+            <Table>
+              <thead>
+                <tr>
+                  {this.state.selectVerificationRequest && <th></th>}
+                  <th>Graduation Year</th>
+                  <th>Degree</th>
+                  <th>Diploma</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  {this.state.selectVerificationRequest && (
+                    <td>
+                      <Input
+                        type="checkbox"
+                        name="check"
+                        onChange={(e) =>
+                          this.handleCheckbox(e, this.state.student.diploma.id, 'diploma')
+                        }
+                      />
+                    </td>
+                  )}
+
+                  <td>{this.state.student.diploma.graduation_year}</td>
+                  <td>{this.state.student.diploma.degree}</td>
+                  <td>
+                    {this.state.student.diploma.certificate &&
+                      this.state.student.diploma.certificate.url && (
+                        <span>
+                          <Button
+                            color="danger"
+                            style={{ marginRight: '20px' }}
+                            onClick={() =>
+                              this.downloadCertificate(this.state.student.diploma.certificate.id)
+                            }
+                          >
+                            Download
+                          </Button>
+
+                          <Button
+                            style={{ marginRight: '20px' }}
+                            color="info"
+                            onClick={() =>
+                              this.openCertificateVerificationModal(
+                                this.state.student.diploma.certificate.id,
+                                'certificate',
+                              )
+                            }
+                          >
+                            Verify
+                          </Button>
+                        </span>
+                      )}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+        )}
         <Certificate
           openModal={this.state.openModal}
           toggle={this.toggleCertificateVerificationModal}
-          certificate={this.state.certificate}
-          type={this.state.certificateType}
+          certificateID={this.state.displayedCertificateID}
+          type={this.state.displayedCertificateType}
         />
 
-        <VerificationInfoModal 
+        <VerificationInfoModal
           openModal={this.state.verificationModalOpen}
           toggleModal={this.toggleVerificationInfoModal}
           verification={this.state.verificationInfo}
