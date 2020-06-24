@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Blockcerts from 'react-blockcerts';
 import { Modal, ModalBody, Button, ModalFooter } from 'reactstrap';
 import { certificateAction } from '../../actions/certificate';
@@ -12,6 +13,7 @@ class Certificate extends React.Component {
       openModal: false,
       certificate: null
     }
+    this.closeModal = this.closeModal.bind(this);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -31,13 +33,20 @@ class Certificate extends React.Component {
   }
 
   openCertificateVerificationModal(certID, type) {
-    certificateAction.getCertificateContent(certID, type).then((data) => {
+    this.props.getCertificateContent(certID, type).then((data) => {
       this.setState({
-        openModal: true,
         certificate: JSON.parse(data),
         certificateType: type,
+        openModal: true
       });
     });
+  }
+
+  closeModal() {
+    this.setState({
+      certificate: null
+    })
+    this.props.toggle()
   }
 
   render() {
@@ -58,7 +67,7 @@ class Certificate extends React.Component {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.props.toggle}>
+            <Button color="secondary" onClick={this.closeModal}>
               Close
             </Button>
           </ModalFooter>
@@ -76,4 +85,14 @@ Certificate.defaultProps = {
   type: 'certificate',
 };
 
-export default Certificate;
+function mapStateToProps(state) {
+  return {
+    auth: state.auth,
+  };
+}
+
+const mapDispatchToProps = {
+  getCertificateContent: certificateAction.getCertificateContent,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Certificate);

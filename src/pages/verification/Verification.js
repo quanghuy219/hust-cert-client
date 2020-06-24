@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { verificationAction } from '../../actions/verification';
 import { certificateAction } from '../../actions/certificate';
 import { lcStorage } from '../../core/utils/localStorage';
@@ -47,11 +48,9 @@ class Verification extends React.Component {
   }
 
   openCertificateVerificationModal(certID, type = 'certificate') {
-    certificateAction.getCertificateContent(certID, type).then((data) => {
-      this.setState({
-        openModal: true,
-        displayedCertificateID: certID,
-      });
+    this.setState({
+      openModal: true,
+      displayedCertificateID: certID,
     });
   }
 
@@ -105,7 +104,7 @@ class Verification extends React.Component {
                   <td>{row.course.id}</td>
                   <td>{row.course.name}</td>
                   <td>{row.grade}</td>
-                  <td style={{width: "20%"}}>
+                  <td style={{ width: '20%' }}>
                     {row.certificate_id && (
                       <span>
                         <Button
@@ -140,7 +139,7 @@ class Verification extends React.Component {
                 <tr key={index}>
                   <td>{row.graduation_year}</td>
                   <td>{row.degree}</td>
-                  <td style={{width: "20%"}}>
+                  <td style={{ width: '20%' }}>
                     {row.certificate_id && (
                       <span>
                         <Button

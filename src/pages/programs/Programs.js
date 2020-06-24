@@ -12,7 +12,7 @@ import {
   ModalFooter,
   Form,
   Breadcrumb,
-  BreadcrumbItem
+  BreadcrumbItem,
 } from 'reactstrap';
 import { programApi } from '../../core/api/program';
 import { schoolsApi } from '../../core/api/schools';
@@ -53,7 +53,6 @@ class Programs extends React.Component {
 
   fetchPrograms = () => {
     const { selectedSchoolId, programName, page, itemsPerPage } = this.state;
-    console.log(selectedSchoolId)
     programApi.getPrograms(selectedSchoolId, programName, page, itemsPerPage).then(
       (res) => {
         this.setState({
@@ -76,11 +75,14 @@ class Programs extends React.Component {
 
   handleSelectSchool = (e) => {
     const selectedSchoolID = e.target.value;
-    this.setState({
-      selectedSchoolId: selectedSchoolID
-    }, () => {
-      this.fetchPrograms();
-    })
+    this.setState(
+      {
+        selectedSchoolId: selectedSchoolID,
+      },
+      () => {
+        this.fetchPrograms();
+      },
+    );
   };
 
   toggleModalAddProgram = () => {
@@ -114,9 +116,9 @@ class Programs extends React.Component {
     return (
       <div>
         <Breadcrumb>
-        <BreadcrumbItem>Home</BreadcrumbItem>
-        <BreadcrumbItem active>Training Programs</BreadcrumbItem>
-      </Breadcrumb>
+          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem active>Training Programs</BreadcrumbItem>
+        </Breadcrumb>
 
         <div className="programs-header" style={{ width: '350px' }}>
           <FormGroup>
@@ -147,9 +149,9 @@ class Programs extends React.Component {
           <Table>
             <thead>
               <tr>
-                <th style={{width: "5%"}}>ID</th>
-                <th style={{width: "20%"}}>Name</th>
-                <th style={{width: "20%"}}>Degree</th>
+                <th style={{ width: '5%' }}>ID</th>
+                <th style={{ width: '20%' }}>Name</th>
+                <th style={{ width: '20%' }}>Degree</th>
                 <th>School</th>
               </tr>
             </thead>
@@ -224,7 +226,11 @@ class Programs extends React.Component {
           </Form>
         </Modal>
 
-        <Pagination handlePageClick={this.handlePageClick} itemsPerPage={this.state.itemsPerPage} totalItems={this.state.totalItems} />
+        <Pagination
+          handlePageClick={this.handlePageClick}
+          itemsPerPage={this.state.itemsPerPage}
+          totalItems={this.state.totalItems}
+        />
       </div>
     );
   }

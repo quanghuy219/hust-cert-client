@@ -106,11 +106,11 @@ class Enrollment extends React.Component {
   }
 
   openCertificateVerificationModal(certID, type) {
-      this.setState({
-        openModal: true,
-        displayedCertificateID: certID,
-        displayedCertificateType: type,
-      });
+    this.setState({
+      openModal: true,
+      displayedCertificateID: certID,
+      displayedCertificateType: type,
+    });
   }
 
   enrollStudent() {
@@ -188,9 +188,11 @@ class Enrollment extends React.Component {
         </Table>
 
         <div className="class-buttons">
-          <Button color="info" onClick={this.toggleModalEnrollStudentOpen}>
-            Add student
-          </Button>
+          {Role.getAdminRoles().includes(this.props.auth.role) && (
+            <Button color="info" onClick={this.toggleModalEnrollStudentOpen}>
+              Add student
+            </Button>
+          )}
 
           {!this.state.updateGrade ? (
             <Button
@@ -294,7 +296,9 @@ class Enrollment extends React.Component {
                   {row.certificate && row.certificate.template_url && (
                     <Button
                       color="info"
-                      onClick={() => this.openCertificateVerificationModal(row.certificate.id, 'template')}
+                      onClick={() =>
+                        this.openCertificateVerificationModal(row.certificate.id, 'template')
+                      }
                     >
                       Display
                     </Button>
@@ -304,7 +308,9 @@ class Enrollment extends React.Component {
                   {row.certificate && row.certificate.url && (
                     <Button
                       color="info"
-                      onClick={() => this.openCertificateVerificationModal(row.certificate.id, 'certificate')}
+                      onClick={() =>
+                        this.openCertificateVerificationModal(row.certificate.id, 'certificate')
+                      }
                     >
                       Verify
                     </Button>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Input, Form } from 'reactstrap';
+import { Table, Button, Input, Form, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import { studentAction } from '../../actions/student';
 import { certificateAction } from '../../actions/certificate';
@@ -141,7 +141,10 @@ class Transcript extends React.Component {
   render() {
     return (
       <div>
-        <h1>Student Information</h1>
+        <Breadcrumb>
+          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem active>Transcript</BreadcrumbItem>
+        </Breadcrumb>
         <p> Student ID: {this.state.student.id} </p>
         <p> Name: {this.state.student.name} </p>
         <p> Email: {this.state.student.email} </p>

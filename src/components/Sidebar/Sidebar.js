@@ -19,7 +19,6 @@ class Sidebar extends React.Component {
       <div>
         <LinksGroup header="Dashboard" headerLink="/home" />
         <LinksGroup header="Training Programs" headerLink="/home/programs" />
-        <LinksGroup header="Notifications" headerLink="/home/admin/notifications" />
         <LinksGroup header="Register" headerLink="/home/register" />
         <LinksGroup header="Courses" headerLink="/home/courses" />
       </div>
@@ -27,19 +26,13 @@ class Sidebar extends React.Component {
 
     const lecturerItems = (
       <div>
-        <LinksGroup header="Dashboard" headerLink="/home" glyph="dashboard" />
-        <LinksGroup header="Tables Basic" headerLink="/home/lecturer/tables" glyph="tables" />
-        <LinksGroup
-          header="Notifications"
-          headerLink="/home/lecturer/notifications"
-          glyph="notifications"
-        />
+        <LinksGroup header="Classes" headerLink="/home" />
       </div>
     );
 
     const studentItems = (
       <div>
-        <LinksGroup header="Dashboard" headerLink="/home" />
+        <LinksGroup header="Transcript" headerLink="/home" />
         <LinksGroup header="History" headerLink="/home/history" />
       </div>
     );
