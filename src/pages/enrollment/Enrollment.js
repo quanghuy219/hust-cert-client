@@ -236,7 +236,7 @@ class Enrollment extends React.Component {
               disabled={!this.props.class.grade_approved}
               onClick={this.createCertificateTemplate}
             >
-              Create Certificate Template
+              Create Raw Certificate
             </Button>
           )}
           {this.props.auth.role === Role.SUPER_ADMIN && (
@@ -257,7 +257,7 @@ class Enrollment extends React.Component {
               <th>Midterm</th>
               <th>Final</th>
               <th className="hidden-sm-down">Grade</th>
-              <th>Certificate Template</th>
+              <th>Raw Certificate</th>
               <th>Digital Certificate</th>
               <th />
             </tr>

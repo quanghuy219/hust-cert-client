@@ -101,7 +101,7 @@ export const classAction = {
         res => {
           dispatch(classAction.fetchClassSuccess(res));
           dispatch(stopLoader())
-          generalUtils.showSuccessNotification('Create certificate templates successfully');
+          generalUtils.showSuccessNotification('Create raw certificates successfully');
         },
         error => {
           dispatch(stopLoader())

@@ -138,7 +138,7 @@ class Students extends React.Component {
             color="info"
             onClick={this.createDiplomaTemplate}
           >
-            Create Diploma Template
+            Create Raw Diploma
           </Button>
 
           {this.props.auth.role === Role.SUPER_ADMIN && (
@@ -182,7 +182,7 @@ class Students extends React.Component {
                 <th>Name</th>
                 <th>Status</th>
                 <th>Qualify for graduate</th>
-                <th>Diploma template</th>
+                <th>Raw diploma</th>
                 <th>Digital diploma</th>
               </tr>
             </thead>

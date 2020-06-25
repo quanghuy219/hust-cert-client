@@ -9,7 +9,7 @@ export const programAction = {
       return programApi.createDiplomaTemplate(programID).then(
         (res) => {
           dispatch(stopLoader());
-					generalUtils.showSuccessNotification('Create diploma templates successfully');
+					generalUtils.showSuccessNotification('Create raw diploma successfully');
 					return Promise.resolve(res)
         },
         (error) => {
