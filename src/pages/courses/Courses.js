@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ReactPaginate from 'react-paginate';
-import { Table } from 'reactstrap';
+import { Table, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import { generalUtils } from '../../core/utils/general';
 import { coursesAction } from '../../actions/courses';
@@ -83,7 +83,10 @@ const CoursesView = ({ className }) => {
 
   return (
     <div>
-      <h1 className="mb-lg">Courses</h1>
+      <Breadcrumb>
+        <BreadcrumbItem>Home</BreadcrumbItem>
+        <BreadcrumbItem active>Courses</BreadcrumbItem>
+      </Breadcrumb>
       <button className={'student-btn btn btn-info'} onClick={handleButtonClick} style={{marginBottom: "20px"}}>
         Create a new course
       </button>
