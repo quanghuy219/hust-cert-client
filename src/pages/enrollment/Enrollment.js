@@ -189,7 +189,7 @@ class Enrollment extends React.Component {
 
         <div className="class-buttons">
           {Role.getAdminRoles().includes(this.props.auth.role) && (
-            <Button color="info" onClick={this.toggleModalEnrollStudentOpen}>
+            <Button color="info" disabled={this.props.class.grade_approved} onClick={this.toggleModalEnrollStudentOpen}>
               Add student
             </Button>
           )}
