@@ -76,9 +76,6 @@ class Header extends React.Component {
                 <i className={cx('fa fa-angle-down ml-sm', s.arrow, { [s.arrowActive]: isOpen })} />
               </DropdownToggle>
               <DropdownMenu style={{ width: '100%' }}>
-                <DropdownItem>
-                  <NavLink to="/home/profile">Profile</NavLink>
-                </DropdownItem>
                 <DropdownItem onClick={this.doLogout}>Logout</DropdownItem>
               </DropdownMenu>
             </Dropdown>
