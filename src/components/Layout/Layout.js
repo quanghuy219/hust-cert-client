@@ -22,7 +22,7 @@ import Dashboard from '../../pages/dashboard';
 import NotFound from '../../pages/notFound';
 import Enrollment from '../../pages/enrollment';
 import Transript from '../../pages/transcript';
-import Verification from '../../pages/verification';
+import { Verification, VerificationHome } from '../../pages/verification';
 import VerificationHistory from '../../pages/verificationHistory';
 import Register from '../../pages/register';
 import Courses from '../../pages/courses';
@@ -71,6 +71,7 @@ class Layout extends React.Component {
     const verifierRoute = (
       <Switch>
         <Route path="/verification/:shareCode" exact component={Verification} />
+        <Route path="/verification" exact component={VerificationHome}/>
         <Route component={NotFound} />
       </Switch>
     );

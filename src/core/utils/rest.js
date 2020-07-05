@@ -10,8 +10,15 @@ export const restUtils = {
       localStorage.removeItem("access_token");
       localStorage.removeItem("user")
       localStorage.removeItem("role")
-      window.location.href = "/login"
-      throw response;
+      return Promise.resolve(response.json()).then((error) => {
+        const { data, message } = error;
+        // eslint-disable-next-line no-throw-literal
+        throw {
+          status: false,
+          message,
+          data,
+        };
+      });
     } else {
       return Promise.resolve(response.json()).then((error) => {
         const { data, message } = error;

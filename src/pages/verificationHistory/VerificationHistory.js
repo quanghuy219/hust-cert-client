@@ -17,7 +17,7 @@ class VerificationHistory extends React.Component {
       let verifications = res.map((row) => {
         return {
           enrollments: row.enrollments,
-          degrees: row.degrees,
+          diplomas: row.diplomas,
           id: row.id,
           expirationTime: generalUtils.parseDateTime(row.expiration_time),
           verifier: row.verifier,
@@ -79,30 +79,59 @@ class VerificationHistory extends React.Component {
                   <td>{row.shareURL}</td>
                 </tr>
                 {row.showDetails && (
-                  <tr>
-                    <td colSpan={6}>
-                      <Table>
-                        <thead>
-                          <tr>
-                            <th>Semester</th>
-                            <th>Course ID</th>
-                            <th>Course Name</th>
-                            <th>Grade</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {row.enrollments.map((enrollment, index) => (
-                            <tr key={index}>
-                              <td>{enrollment.semester}</td>
-                              <td>{enrollment.course.id}</td>
-                              <td>{enrollment.course.name}</td>
-                              <td>{enrollment.grade}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    </td>
-                  </tr>
+                  <>
+                    {row.enrollments.length > 0 && (
+                      <tr>
+                        <td colSpan={6}>
+                          <Table>
+                            <caption>Transcript</caption>
+                            <thead>
+                              <tr>
+                                <th>Semester</th>
+                                <th>Course ID</th>
+                                <th>Course Name</th>
+                                <th>Grade</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {row.enrollments.map((enrollment, index) => (
+                                <tr key={index}>
+                                  <td>{enrollment.semester}</td>
+                                  <td>{enrollment.course.id}</td>
+                                  <td>{enrollment.course.name}</td>
+                                  <td>{enrollment.grade}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        </td>
+                      </tr>
+                    )}
+
+                    {row.diplomas.length > 0 && (
+                      <tr>
+                        <td colSpan={6}>
+                          <Table>
+                          <caption>Diploma</caption>
+                            <thead>
+                              <tr>
+                                <th>Graduation Year</th>
+                                <th>Degree</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {row.diplomas.map((diploma, index) => (
+                                <tr key={index}>
+                                  <td>{diploma.graduation_year}</td>
+                                  <td>{diploma.degree}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 )}
               </React.Fragment>
             ))}

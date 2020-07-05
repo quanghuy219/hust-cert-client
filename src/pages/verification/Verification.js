@@ -1,12 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { verificationAction } from '../../actions/verification';
-import { certificateAction } from '../../actions/certificate';
 import { lcStorage } from '../../core/utils/localStorage';
 import Certificate from '../certificate';
 import { Table, Button } from 'reactstrap';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { generalUtils } from '../../core/utils';
 
 const override = css`
   display: block;
@@ -40,6 +39,10 @@ class Verification extends React.Component {
         diplomas: res.diplomas || [],
         renderPage: true,
       });
+    })
+    .catch(error => {
+      generalUtils.showErrorNotification(error.message);
+      this.props.history.push("/verification");
     });
   }
 
@@ -169,4 +172,4 @@ class Verification extends React.Component {
   }
 }
 
-export default Verification;
+export { Verification };

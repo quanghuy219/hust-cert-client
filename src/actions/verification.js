@@ -8,7 +8,7 @@ export const verificationAction = {
         return new Promise((resolve) => resolve(res));
       },
       (error) => {
-        generalUtils.showErrorNotification(error.message);
+        return Promise.reject(error);
       },
     );
   },

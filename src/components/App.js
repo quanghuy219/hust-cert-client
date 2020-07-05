@@ -6,10 +6,7 @@ import { ToastContainer, Slide } from 'react-toastify';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { css } from '@emotion/core';
 import LayoutComponent from '../components/Layout';
-import Register from '../pages/register';
-import Courses from '../pages/courses';
 import Login from '../pages/login';
-import Programs from '../pages/programs';
 import { logoutUser } from '../actions/user';
 import { Role } from '../constants';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -54,6 +51,11 @@ class App extends React.PureComponent {
             <Route path="/login" exact component={Login} />
             <Route
               path="/verification/:shareCode"
+              exact
+              render={(props) => <LayoutComponent {...props} verifier={true} />}
+            />
+            <Route
+              path="/verification"
               exact
               render={(props) => <LayoutComponent {...props} verifier={true} />}
             />
