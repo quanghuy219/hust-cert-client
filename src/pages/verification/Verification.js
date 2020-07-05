@@ -86,9 +86,9 @@ class Verification extends React.Component {
         <p> Email: {this.state.student.email} </p>
         <p> Program: {this.state.student.program.name} </p>
         <p>School: {this.state.student.program.school.name}</p>
-
+        <br/>
         <div>
-          <h3 className="mb-lg">Transcript</h3>
+          <h5>Transcript</h5>
           <Table>
             <thead>
               <tr>

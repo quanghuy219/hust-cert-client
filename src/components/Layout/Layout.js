@@ -64,6 +64,8 @@ class Layout extends React.Component {
         <Route path="/home" exact component={Transript} />
         <Route path="/home/transcript" exact component={Transript} />
         <Route path="/home/history" exact component={VerificationHistory} />
+        <Route path="/verification/:shareCode" exact component={Verification} />
+        <Route path="/verification" exact component={VerificationHome}/>
         <Redirect to="/" />
       </Switch>
     );
