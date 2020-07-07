@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Table, Button, Input } from 'reactstrap';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import { classAction } from '../../actions/class';
 import { classApi } from '../../core/api';
@@ -143,7 +143,11 @@ class Enrollment extends React.Component {
   render() {
     return (
       <div>
-        <h1 className="mb-lg">Class Details</h1>
+        <Breadcrumb>
+          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem>Classes</BreadcrumbItem>
+          <BreadcrumbItem>{this.state.classID}</BreadcrumbItem>
+        </Breadcrumb>
         <Table borderless className="class-info">
           <tbody>
             <tr>
@@ -174,12 +178,12 @@ class Enrollment extends React.Component {
               <td>
                 <p>
                   {' '}
-                  Certificate Templates Created Time:{' '}
+                  Raw Certificates Created Time:{' '}
                   {generalUtils.parseDate(this.props.class.certificate_template_created_time)}{' '}
                 </p>
                 <p>
                   {' '}
-                  Certificate Created Time:{' '}
+                  Certificates Created Time:{' '}
                   {generalUtils.parseDate(this.props.class.certificate_created_time)}{' '}
                 </p>
               </td>
@@ -189,7 +193,11 @@ class Enrollment extends React.Component {
 
         <div className="class-buttons">
           {Role.getAdminRoles().includes(this.props.auth.role) && (
-            <Button color="info" disabled={this.props.class.grade_approved} onClick={this.toggleModalEnrollStudentOpen}>
+            <Button
+              color="info"
+              disabled={this.props.class.grade_approved}
+              onClick={this.toggleModalEnrollStudentOpen}
+            >
               Add student
             </Button>
           )}
