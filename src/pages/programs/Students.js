@@ -182,8 +182,9 @@ class Students extends React.Component {
                 <th>Name</th>
                 <th>Status</th>
                 <th>Qualify for graduate</th>
-                <th>Raw diploma</th>
-                <th>Digital diploma</th>
+                <th>Raw Diploma</th>
+                <th>Digital Diploma</th>
+                <th>Graduation Year</th>
               </tr>
             </thead>
             <tbody>
@@ -223,6 +224,7 @@ class Students extends React.Component {
                       </Button>
                     )}
                   </td>
+                  <td>{student.status === 'graduated' && student?.diploma?.graduation_year}</td>
                 </tr>
               ))}
             </tbody>

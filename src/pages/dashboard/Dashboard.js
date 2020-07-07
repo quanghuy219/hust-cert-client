@@ -65,7 +65,6 @@ class Dashboard extends Component {
   };
 
   fetchCourses = () => {
-    console.log('fetchCourses');
     const { school_id } = this.state;
     coursesApi.getCourses({ school_id }).then(
       (res) => {
@@ -97,8 +96,6 @@ class Dashboard extends Component {
 
     if (!isModalOpen) {
       this.fetchSchools();
-    } else {
-      this.setState({ schools: [], courses: [], lecturers: [] });
     }
 
     this.setState({ isModalOpen: !isModalOpen });
